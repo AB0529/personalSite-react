@@ -1,0 +1,28 @@
+// Global colors
+$text-color-white: #FFEEDB;
+$text-color-dark: #404E4D;
+
+// Dark colors
+$bg-color-dark: #4C3B4D;
+$bg-color2-dark: #ADA8B6;
+$hl-color-dark: #A53860;
+$hl-color2-dark: #61C9A8;
+
+// Light colors
+$bg-color-light: #f4f3ee;
+$bg-color2-light: #bcb8b1;
+$hl-color-light: #e0afa0;
+$hl-color2-light: #83203e;
+
+:export {
+    textColorWhite: $text-color-white;
+    textColorDark: $text-color-dark;
+    bgColorDark: $bg-color-dark;
+    bgColor2Dark: $bg-color2-dark;
+    hlColorDark: $hl-color-dark;
+    h1Color2Dark: $hl-color2-dark;
+    bgColorLight: $bg-color-light;
+    bgColor2Light: $bg-color2-light;
+    hlColorLight: $hl-color-light;
+    hlColor2Light: $hl-color2-light;
+}
