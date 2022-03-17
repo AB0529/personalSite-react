@@ -9,7 +9,6 @@ import { useEffect, useState } from "react"
 
 export default () => {
     const variant = useGlobalState("theme")[0];
-    console.log(variant);
     const [projects, setProjects] = useState<any>(null);
     const ico: any = DevIcons;
 
@@ -18,7 +17,7 @@ export default () => {
         const getIcon = (name: string): any => {
             name = name.toLowerCase();
             name = name.charAt(0).toUpperCase() + name.slice(1);
-    
+
             switch (name) {
                 case "Typescript":
                     name = "Javascript";
@@ -30,10 +29,9 @@ export default () => {
                     name = "Html5";
                     break
             }
-    
+
             return ico["Di" + name];
         }
-    
 
         fetch("https://api.github.com/users/AB0529/repos?per_page=100")
             .then(d => d.json())
@@ -63,14 +61,14 @@ export default () => {
 
                         return (
                             <Col className="d-flex align-items-center justify-content-center">
-                            <Card className={`project-card ${variant === "dark" ? "project-card-dark" : "project-card-light"}`}>
-                                <Card.Body>
-                                    <Card.Title> <Ico /> <strong>{p.title}</strong> </Card.Title>
-                                    <Card.Text>{p.desc}</Card.Text>
-                                </Card.Body>
-                                <Button variant="success" href={p.link} target="_blank" >Link</Button>
-                            </Card>
-                        </Col>
+                                <Card className={`project-card ${variant === "dark" ? "project-card-dark" : "project-card-light"}`}>
+                                    <Card.Body>
+                                        <Card.Title> <Ico /> <strong>{p.title}</strong> </Card.Title>
+                                        <Card.Text>{p.desc}</Card.Text>
+                                    </Card.Body>
+                                    <Button variant="success" href={p.link} target="_blank" >Link</Button>
+                                </Card>
+                            </Col>
                         )
                     })}
                 </Row>
