@@ -7,7 +7,7 @@ import { useGlobalState } from '../../../../../state'
 
 
 export default () => {
-    const variant = useGlobalState("theme")[0] ? useGlobalState("theme")[0] : "dark";
+    const variant = useGlobalState("theme")[0];
 
     const img = (
         <Image className="profile-pic"
