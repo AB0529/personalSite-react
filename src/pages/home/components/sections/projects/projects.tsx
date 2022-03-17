@@ -37,7 +37,7 @@ export default () => {
             .then(d => d.json())
             .then(data => {
                 let projects: any = [];
-                
+
                 data.forEach((d: any) => {
                     projects.push({
                         title: d.name,
@@ -66,7 +66,7 @@ export default () => {
                                     <Card.Title> <Ico /> <strong>{p.title}</strong> </Card.Title>
                                     <Card.Text>{p.desc}</Card.Text>
                                 </Card.Body>
-                                <Button variant="success" href={p.link}>Link</Button>
+                                <Button variant="success" href={p.link} target="_blank" >Link</Button>
                             </Card>
                         </Col>
                         )

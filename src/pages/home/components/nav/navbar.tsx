@@ -32,9 +32,9 @@ export default () => {
 
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#about"> <strong>About</strong> </Nav.Link>
-                        <Nav.Link href="#projects"><strong>Projects</strong></Nav.Link>
-                        <Nav.Link href="#contact"><strong>Contact</strong></Nav.Link>
+                        <Nav.Link href="#about" target="_blank"> <strong>About</strong> </Nav.Link>
+                        <Nav.Link href="#projects" target="_blank"><strong>Projects</strong></Nav.Link>
+                        <Nav.Link href="#contact" target="_blank"><strong>Contact</strong></Nav.Link>
                     </Nav>
                     <Nav>
                         <Nav.Link>
@@ -42,7 +42,7 @@ export default () => {
                         </Nav.Link>
                         {/* Socials */}
                         {socials.map(s => (
-                            <Nav.Link href={s.link}>
+                            <Nav.Link href={s.link} target="_blank">
                                 <strong><a>{s.icon} {s.name}</a> </strong>
 
                             </Nav.Link>
