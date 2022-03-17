@@ -1,0 +1,36 @@
+@import "../../../../../css/colors.scss";
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+@import url('https://fonts.googleapis.com/css?family=Averia+Serif+Libre|Bubblegum+Sans|Caveat+Brush|Chewy|Lobster+Two');
+
+// Ugly fix but it works
+body {
+    background-image: url("../../../../../../public/banner-img.png");
+    background-position: top;
+    background-repeat: no-repeat;
+}
+
+
+.banner-title > #bracs {
+    font-family: "Lato", Calibri, Arial, sans-serif;
+    color: rgb(128, 26, 26);
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.banner-title #first {
+    color: $text-color-white;
+}
+
+.banner-title #last {
+    color: rgb(129, 15, 163);
+}
+
+.banner-title #first,
+.banner-title #last {
+    font-family: 'Lobster Two', cursive;
+    font-size: 80px;
+}
+
+.banner-section {
+    height: 80vh;
+}

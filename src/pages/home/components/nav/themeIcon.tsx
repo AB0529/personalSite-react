@@ -1,6 +1,6 @@
-import { useGlobalState } from "../../../state";
+import { useGlobalState } from "../../../../state";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import { setDarkTheme, setLightTheme} from "../../../state/setTheme";
+import { setDarkTheme, setLightTheme} from "../../../../state/setTheme";
 
 export default () => {
     let theme = useGlobalState('theme')[0];
@@ -15,7 +15,7 @@ export default () => {
                 break;
         }
     }
-    const icon = theme === 'dark' ? <MdDarkMode size={30} /> : <MdLightMode size={30} />;
+    const icon = theme === 'light' ? <MdDarkMode size={30} /> : <MdLightMode size={30} />;
 
     return (
         <a onClick={handleThemeChange} >

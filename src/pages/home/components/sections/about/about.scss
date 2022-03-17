@@ -1,0 +1,15 @@
+@import "../../../../../css/colors.scss";
+
+.about-text {
+    font-size: 25px;
+}
+
+.about-section-dark {
+    background-color: $about-section-color-dark;
+    color: $text-color-white;
+}
+
+.about-section-light {
+    background-color: $about-section-color-light;
+    color: $text-color-dark;
+}

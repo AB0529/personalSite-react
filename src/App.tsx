@@ -12,6 +12,10 @@ const App = () => {
   useEffect(() => {
     const theme = localStorage.getItem('theme');
 
+    // Theme is not set, set dark as default
+    if (!theme)
+      localStorage.setItem('theme', 'dark');
+
     switch (theme) {
       case 'dark':
         setDarkTheme();

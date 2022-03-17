@@ -1,0 +1,26 @@
+@import "../../../../../css/colors.scss";
+
+.projects-section-dark {
+    background-color: $projects-section-color-dark;
+    color: $text-color-white;
+}
+
+.projects-section-light {
+    background-color: $projects-section-color-light;
+    color: $text-color-dark;
+}
+
+.project-card {
+    margin: 3px;
+    width: 15rem;
+    height: 15rem;
+}
+
+.project-card-dark {
+    background-color: $project-card-color-dark;
+    color: $text-color-white;
+}
+
+.project-card-light {
+    color: $text-color-dark;
+}

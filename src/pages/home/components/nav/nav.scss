@@ -1,0 +1,23 @@
+@import "../../../../css/colors.scss";
+@import url("https://fonts.googleapis.com/css?family=Averia+Serif+Libre|Bubblegum+Sans|Caveat+Brush|Chewy|Lobster+Two");
+
+.nav-dark > #first {
+    color: $text-color-white !important;
+}
+
+.nav-light > #first {
+    color: $text-color-dark !important;
+}
+
+.nav-brand {
+    letter-spacing: 1px;
+    font-size: 25px;
+    font-family: "Lobster Two", cursive;
+}
+
+.nav-brand > #first {
+    color: rgb(66, 63, 65);
+}
+.nav-brand > #last {
+    color: rgb(157, 18, 199);
+}
