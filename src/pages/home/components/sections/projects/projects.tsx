@@ -8,7 +8,7 @@ import { useGlobalState } from "../../../../../state"
 import { useEffect, useState } from "react"
 
 export default () => {
-    const variant = useGlobalState("theme")[0];
+    const variant = useGlobalState("theme")[0] ? useGlobalState("theme")[0] : "dark";
     const [projects, setProjects] = useState<any>(null);
     const ico: any = DevIcons;
 

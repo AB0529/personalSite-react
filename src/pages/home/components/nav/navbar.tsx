@@ -21,10 +21,10 @@ export default () => {
         }
     ];
     
-    const theme = useGlobalState('theme')[0];
+    const variant = useGlobalState("theme")[0] ? useGlobalState("theme")[0] : "dark";
 
     return (
-        <Navbar sticky="top" collapseOnSelect expand="lg" variant={theme === "dark" ? "dark" : "light"}>
+        <Navbar sticky="top" collapseOnSelect expand="lg" variant={variant === "dark" ? "dark" : "light"}>
             <Container>
                 {/* Logo */}
                 <Navbar.Brand href="#home"> <NavBrand /> </Navbar.Brand>

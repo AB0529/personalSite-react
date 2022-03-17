@@ -5,7 +5,7 @@ import { AiOutlineMail } from "react-icons/ai"
 import "./footer.scss"
 
 export default () => {
-    const variant = useGlobalState("theme")[0];
+    const variant = useGlobalState("theme")[0] ? useGlobalState("theme")[0] : "dark";
     const email = "contact@anishb.net";
     const year = new Date().getFullYear();
 
