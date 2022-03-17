@@ -44,7 +44,6 @@ export default () => {
                         {socials.map(s => (
                             <Nav.Link href={s.link} target="_blank">
                                 <strong><a>{s.icon} {s.name}</a> </strong>
-
                             </Nav.Link>
                         ))}
                     </Nav>
