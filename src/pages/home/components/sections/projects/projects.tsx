@@ -12,27 +12,28 @@ export default () => {
     const [projects, setProjects] = useState<any>(null);
     const ico: any = DevIcons;
 
-    const getIcon = (name: string): any => {
-        name = name.toLowerCase();
-        name = name.charAt(0).toUpperCase() + name.slice(1);
-
-        switch (name) {
-            case "Typescript":
-                name = "Javascript";
-                break
-            case "Css":
-                name = "Css3"
-                break
-            case "Html":
-                name = "Html5";
-                break
-        }
-
-        return ico["Di" + name];
-    }
-
     // Load projects
     useEffect(() => {
+        const getIcon = (name: string): any => {
+            name = name.toLowerCase();
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+    
+            switch (name) {
+                case "Typescript":
+                    name = "Javascript";
+                    break
+                case "Css":
+                    name = "Css3"
+                    break
+                case "Html":
+                    name = "Html5";
+                    break
+            }
+    
+            return ico["Di" + name];
+        }
+    
+
         fetch("https://api.github.com/users/AB0529/repos?per_page=100")
             .then(d => d.json())
             .then(data => {
