@@ -37,6 +37,7 @@ export default () => {
                             <li>Python (Django)</li>
                             <li>Go</li>
                             <li>MySQL</li>
+                            <li>MongoDB</li>
                             and much more!
                         </ul>
                     </p>
