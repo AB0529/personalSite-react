@@ -15,34 +15,30 @@ export default () => {
             width={128}
             fluid={true}
             roundedCircle={true}
-            src="https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec" />
+            src="selfie-min.jpg" />
     )
-    const aboutText = `saw you venting
-    Don't try to bullshit your way out of this
-    You're so suspicious
-    And that's clue I will not miss
-    You're the impostor
-    I saw you run away
-    From electrical
-    Where I saw blue's body lay
-    Yeah, you're a sussy baka
-    I see your face
-    You're a sussy baka
-    You're a disgrace
-    You're a sussy baka
-    A war of race
-    You're a sussy baka
-    When the impostor is
-    Red`
 
     return (
         <Container id="about" fluid className={variant === "dark" ? "about-section-dark" : "about-section-light"}>
             <SectionTitle title="About Me" />
 
             <div className="d-flex about-text text-center">
-                <Col md={12}>
+                <Col ms={2}>
                     {img}
-                    <p className="about-text text-center">{aboutText}</p>
+                    <p className="about-text text-center">
+                        I am a full stack web developer who enjoys problem solving. I have strong technical skills and a background developing websites, automation scripts, and other applications.
+                        <br />
+                        I am always open and interested in new learning opportunities. Please feel free to get in touch via email at <span style={{color: "rgba(107, 181, 201, 1)"}}>contact@anishb.net</span>.
+                        <br />
+                        <strong>Knowledgeable</strong>:
+                        <ul>
+                            <li>JavaScript (TypeScript, Node.JS)</li>
+                            <li>Linux (Arch, Gentoo, Debian)</li>
+                            <li>Go</li>
+                            <li>MySQL</li>
+                            and much more!
+                        </ul>
+                    </p>
                 </Col>
             </div>
         </Container>
