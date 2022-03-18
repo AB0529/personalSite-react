@@ -32,8 +32,9 @@ export default () => {
                         <br />
                         <strong>Knowledgeable</strong>:
                         <ul>
-                            <li>JavaScript (TypeScript, Node.JS)</li>
+                            <li>JavaScript (TypeScript, Node.JS, React)</li>
                             <li>Linux (Arch, Gentoo, Debian)</li>
+                            <li>Python (Django)</li>
                             <li>Go</li>
                             <li>MySQL</li>
                             and much more!
