@@ -15,7 +15,7 @@ export default () => {
             width={128}
             fluid={true}
             roundedCircle={true}
-            src="selfie-min.jpg" />
+            src="selfie-min.webp" />
     )
 
     return (
