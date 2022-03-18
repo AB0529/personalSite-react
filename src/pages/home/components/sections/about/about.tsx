@@ -25,13 +25,13 @@ export default () => {
             <div className="d-flex about-text text-center">
                 <Col ms={2}>
                     {img}
-                    <p className="about-text text-center">
+                    <p>
                         I am a full stack web developer who enjoys problem solving. I have strong technical skills and a background developing websites, automation scripts, and other applications.
                         <br />
                         I am always open and interested in new learning opportunities. Please feel free to get in touch via email at <span style={{color: "rgba(107, 181, 201, 1)"}}>contact@anishb.net</span>.
                         <br />
                         <strong>Knowledgeable</strong>:
-                        <ul>
+                        <ul style={{listStylePosition: "inside"}}>
                             <li>JavaScript (TypeScript, Node.JS, React)</li>
                             <li>Linux (Arch, Gentoo, Debian)</li>
                             <li>Python (Django)</li>
