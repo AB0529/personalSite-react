@@ -1,7 +1,7 @@
 import { createGlobalState } from "react-hooks-global-state";
 
 const themeState = {
-    theme: '',
+    theme: 'dark',
 }
 
 const { setGlobalState, useGlobalState } = createGlobalState(themeState);

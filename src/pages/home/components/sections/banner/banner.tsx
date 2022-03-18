@@ -10,7 +10,6 @@ export default () => {
     return (
         <>
             <ParallaxProvider>
-
                 <Container id="#home" fluid className="banner-section">
                     <div className="d-flex align-items-center justify-content-center">
                         <Parallax speed={-20}>
