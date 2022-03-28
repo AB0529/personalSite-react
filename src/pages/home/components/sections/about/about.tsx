@@ -10,9 +10,7 @@ export default () => {
     const variant = useGlobalState("theme")[0];
 
     const img = (
-        <Image className="profile-pic"
-            height={128}
-            width={128}
+        <Image width={256}
             fluid={true}
             roundedCircle={true}
             src="selfie-min.webp" />
@@ -28,7 +26,7 @@ export default () => {
                     <p>
                         I am a full stack web developer who enjoys problem solving. I have strong technical skills and a background developing websites, automation scripts, and other applications.
                         <br />
-                        I am always open and interested in new learning opportunities. Please feel free to get in touch via email at <span style={{color: "rgba(107, 181, 201, 1)"}}>contact@anishb.net</span>.
+                        I am always open and interested in new learning opportunities. Please feel free to get in touch via email at <a href="mailto://contact@anishb.net" style={{color: "rgba(107, 181, 201, 1)"}}>contact@anishb.net</a>.
                         <br />
                         <strong>Knowledgeable</strong>:
                         <ul style={{listStylePosition: "inside"}}>
