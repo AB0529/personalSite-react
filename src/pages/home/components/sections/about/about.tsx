@@ -35,6 +35,7 @@ export default () => {
                             <li>Linux (Arch, Gentoo, Debian)</li>
                             <li>Python (Django, Flask)</li>
                             <li>Databases (MySQL, MongoDB)</li>
+                            <li>Go</li>
                             and much more!
                         </ul>
                     </p>
