@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react"
 import { Container } from "react-bootstrap"
 import { Parallax, ParallaxBanner, ParallaxProvider } from "react-scroll-parallax"
 
