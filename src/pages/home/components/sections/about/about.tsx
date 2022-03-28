@@ -28,7 +28,7 @@ export default () => {
                         <br />
                         I am always open and interested in new learning opportunities. Please feel free to get in touch via email at <a href="mailto://contact@anishb.net" style={{color: "rgba(107, 181, 201, 1)"}}>contact@anishb.net</a>.
                         <br />
-                        <strong>Knowledgeable</strong>:
+                        <strong>Skills</strong>:
                         <ul style={{listStylePosition: "inside"}}>
                             <li>JavaScript (TypeScript, Node.JS, React)</li>
                             <li>Java (Spingboot, Gradle, Maven)</li>
