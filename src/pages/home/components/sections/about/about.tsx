@@ -33,11 +33,10 @@ export default () => {
                         <strong>Knowledgeable</strong>:
                         <ul style={{listStylePosition: "inside"}}>
                             <li>JavaScript (TypeScript, Node.JS, React)</li>
+                            <li>Java (Spingboot, Gradle, Maven)</li>
                             <li>Linux (Arch, Gentoo, Debian)</li>
-                            <li>Python (Django)</li>
-                            <li>Go</li>
-                            <li>MySQL</li>
-                            <li>MongoDB</li>
+                            <li>Python (Django, Flask)</li>
+                            <li>Databases (MySQL, MongoDB)</li>
                             and much more!
                         </ul>
                     </p>
