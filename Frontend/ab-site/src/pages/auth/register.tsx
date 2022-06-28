@@ -48,21 +48,26 @@ export const Register = () => {
   ) => {
     setSubmitting(true);
 
-    userRegister(username, password, email, firstName, lastName)
-      .then((resp) => {
-        // Store user token
-        setToken(`AB0529 ${resp.result.token}`);
-        setStatus({
-          error: false,
-          msg: "Success, you will now be redirected...",
-        });
-        setSubmitting(false);
-        setTimeout(() => navigate(-1), 3e3);
-      })
-      .catch((err: AxiosError) => {
-        setSubmitting(false);
-        setStatus(handleAxiosError(err));
-      });
+    setStatus({
+      error: true,
+      msg: "Registration is disabled at this time.",
+    });
+    setSubmitting(false);
+    //   userRegister(username, password, email, firstName, lastName)
+    //     .then((resp) => {
+    //       // Store user token
+    //       setToken(`AB0529 ${resp.result.token}`);
+    //       setStatus({
+    //         error: false,
+    //         msg: "Success, you will now be redirected...",
+    //       });
+    //       setSubmitting(false);
+    //        setTimeout(() => navigate("/"), 3e3);
+    //     })
+    //     .catch((err: AxiosError) => {
+    //       setSubmitting(false);
+    //       setStatus(handleAxiosError(err));
+    //     });
   };
 
   const formRender = (values: any) => <RegisterCardForm {...values} />;
