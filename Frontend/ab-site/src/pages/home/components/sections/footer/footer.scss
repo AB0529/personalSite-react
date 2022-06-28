@@ -1,16 +1,20 @@
 @import "../../../../../css/colors.scss";
 
 .footer-section {
-    position: absolute;
-    width: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 .footer-section-dark {
-    background-color: $footer-section-color-dark;
-    color: $text-color-white;
+  background-color: $footer-section-color-dark;
+  color: $text-color-white;
 }
 
 .footer-section-light {
-    background-color: $footer-section-color-light;
-    color: $text-color-dark;
+  background-color: $footer-section-color-light;
+  color: $text-color-dark;
+}
+
+.footer-socials {
+  color: $text-color-dark;
 }
