@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import getUser from "../../../../helpers/api/user/getUser";
 import { useStickyState } from "../../../../helpers/hooks/useStickyState";
 import { ADMIN_ROLE, IUser } from "../../../../helpers/typings";
-import { LoadingAnimation } from "../../../home/components/loadingAnimation";
+import LoadingPage from "../LoadingPage";
 
 export const AdminRoute = () => {
   const [token] = useStickyState("token");
@@ -18,7 +18,7 @@ export const AdminRoute = () => {
     }
   );
 
-  if (isLoading) return <LoadingAnimation size={8} />;
+  if (isLoading) return <LoadingPage />;
   else if (isError) return <Navigate to="/login" />;
 
   const isAdmin =

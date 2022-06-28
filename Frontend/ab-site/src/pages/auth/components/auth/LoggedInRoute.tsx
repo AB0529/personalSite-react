@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { Navigate, Outlet } from "react-router-dom";
 import getUser from "../../../../helpers/api/user/getUser";
 import { useStickyState } from "../../../../helpers/hooks/useStickyState";
-import { LoadingAnimation } from "../../../home/components/loadingAnimation";
+import LoadingPage from "../LoadingPage";
 
 export const LoggedInRoute = () => {
   const [token] = useStickyState("token");
@@ -10,7 +10,7 @@ export const LoggedInRoute = () => {
     return await getUser(token);
   });
 
-  if (isLoading) return <LoadingAnimation size={8} />;
+  if (isLoading) return <LoadingPage />;
   else if (isError) return <Navigate to="/login" />;
 
   return <Outlet context={data?.result} />;
