@@ -1,8 +1,10 @@
 import { AxiosError } from "axios";
+import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useQuery } from "react-query";
 import getUser from "../../helpers/api/user/getUser";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
+import { useGlobalState } from "../../state";
 import { MainNavbar } from "../home/components/nav/MainNavbar";
 
 export const AdminHome = () => {
@@ -23,6 +25,15 @@ export const AdminHome = () => {
       return await getUser(token);
     }
   );
+  const theme = useGlobalState("theme")[0];
+
+  useEffect(() => {
+    if (theme === "dark") document.body.classList.add("dark-theme");
+
+    return () => {
+      document.body.classList.remove("dark-theme");
+    };
+  });
 
   return (
     <>

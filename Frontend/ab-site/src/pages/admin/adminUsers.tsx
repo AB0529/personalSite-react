@@ -1,10 +1,12 @@
 import { AxiosError } from "axios";
+import { useEffect } from "react";
 import { Container, Table } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import getAllUsersLimited from "../../helpers/api/user/getAllUsersLimited";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
 import { IDBUser, IUser } from "../../helpers/typings";
+import { useGlobalState } from "../../state";
 import { MainNavbar } from "../home/components/nav/MainNavbar";
 
 export const AdminUsers = () => {
@@ -32,6 +34,15 @@ export const AdminUsers = () => {
       retry: 1,
     }
   );
+  const theme = useGlobalState("theme")[0];
+
+  useEffect(() => {
+    if (theme === "dark") document.body.classList.add("dark-theme");
+
+    return () => {
+      document.body.classList.remove("dark-theme");
+    };
+  });
 
   return (
     <>
