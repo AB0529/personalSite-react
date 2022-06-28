@@ -51,7 +51,7 @@ export const AdminUsers = () => {
         {isLoading && <h5>...</h5>}
         {isError && <h5>Error: {(error as AxiosError).message}</h5>}
         {data && (
-          <Table striped bordered hover>
+          <Table striped bordered hover variant={theme}>
             <thead>
               <tr>
                 <th>#</th>
@@ -60,7 +60,7 @@ export const AdminUsers = () => {
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>Password</th>
+                {/* <th>Password</th> */}
               </tr>
             </thead>
             <tbody>
@@ -73,7 +73,7 @@ export const AdminUsers = () => {
                     <td>{user.lastName}</td>
                     <td>{user.email}</td>
                     <td>{user.roles.flatMap((a) => a.name + " ")}</td>
-                    <td>{user.password}</td>
+                    {/* <td>{user.password}</td> */}
                   </tr>
                 );
               })}
