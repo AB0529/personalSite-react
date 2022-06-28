@@ -97,7 +97,7 @@ export default ({ errors, status, touched, isSubmitting }: IProps) => {
               Login
             </Button>
             {isSubmitting && (
-              <img src="/loading.gif" alt="loading" className="lr-l-g" />
+              <img src="/assets/loading.gif" alt="loading" className="lr-l-g" />
             )}
             <br /> <a href="/register">Need an account?</a>
           </div>
