@@ -3,7 +3,9 @@ import { useQuery } from "react-query";
 import getUser from "../../../../helpers/api/user/getUser";
 import { useStickyState } from "../../../../helpers/hooks/useStickyState";
 import { ADMIN_ROLE } from "../../../../helpers/typings";
+import { useGlobalState } from "../../../../state";
 import { LoggedInUser } from "./loggedInUser";
+import NavBrand from "./navBrand";
 import ThemeIcon from "./themeIcon";
 interface IProps {
   items: Array<{
@@ -17,9 +19,7 @@ interface IProps {
 }
 
 export const MainNavbar = ({ items }: IProps) => {
-  const NAV_TITLE = "Anish B.";
-  const NAV_LOGO = "/assets/ocotpus-ico-128x128.png";
-
+  const theme = useGlobalState("theme")[0];
   const [token] = useStickyState("token");
   const { isLoading, isError, data } = useQuery(
     "currentUser",
@@ -34,23 +34,19 @@ export const MainNavbar = ({ items }: IProps) => {
     data?.result.authorities.filter((a: any) => a.authority === ADMIN_ROLE)
       .length > 0;
 
+  const t = theme === "dark" ? "dark" : "light";
+
   return (
     <Navbar
-      variant="dark"
-      bg="dark"
+      variant={t}
+      bg={t}
       /*expand="lg"*/
       sticky="top"
       collapseOnSelect
     >
       <Container fluid>
         <Navbar.Brand href="#home">
-          <img
-            src={NAV_LOGO}
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />{" "}
-          {NAV_TITLE}
+          <NavBrand />
         </Navbar.Brand>{" "}
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
