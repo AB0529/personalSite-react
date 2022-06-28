@@ -21,6 +21,7 @@ export const Profile = () => {
       document.body.classList.remove("dark-theme");
     };
   });
+
   return (
     <>
       <MainNavbar items={NAV_ITEMS} />
