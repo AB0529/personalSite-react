@@ -6,6 +6,9 @@ import * as FormikForm from "./components/form/FormikForm";
 import { AxiosError } from "axios";
 import handleAxiosError from "../../helpers/api/handleAxiosError";
 import LoginCardForm from "./components/form/LoginCardForm";
+import { useGlobalState } from "../../state";
+import Navbar from "../home/components/nav/navbar";
+import { MainNavbar } from "../home/components/nav/MainNavbar";
 
 // TODO: Add incoming from prop for navigation
 const fields: FormikForm.IFormikFormField[] = [
@@ -22,6 +25,7 @@ const fields: FormikForm.IFormikFormField[] = [
 ];
 
 export const Login = () => {
+  const theme = useGlobalState("theme")[0];
   const [token, setToken] = useStickyState("token");
   const navigate = useNavigate();
 
@@ -45,9 +49,16 @@ export const Login = () => {
   };
 
   const formRender = (values: any) => <LoginCardForm {...values} />;
+  const NAV_ITEMS = [
+    {
+      name: "Home",
+      href: "/",
+    },
+  ];
 
   return (
     <>
+      <MainNavbar items={NAV_ITEMS} />
       <FormikForm.FormikForm
         fields={fields}
         onSubmit={formOnSubmit}

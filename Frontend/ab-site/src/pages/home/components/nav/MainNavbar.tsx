@@ -4,6 +4,7 @@ import getUser from "../../../../helpers/api/user/getUser";
 import { useStickyState } from "../../../../helpers/hooks/useStickyState";
 import { ADMIN_ROLE } from "../../../../helpers/typings";
 import { LoggedInUser } from "./loggedInUser";
+import ThemeIcon from "./themeIcon";
 interface IProps {
   items: Array<{
     name: string;
@@ -71,6 +72,9 @@ export const MainNavbar = ({ items }: IProps) => {
             {/* Load admin item */}
             {data && isAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
             <LoggedInUser isLoading={isLoading} isError={isError} data={data} />
+            <Nav.Link>
+              <ThemeIcon />
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

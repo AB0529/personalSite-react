@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import handleAxiosError from "../../helpers/api/handleAxiosError";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
 import RegisterCardForm from "./components/form/RegisterCardForm";
+import { MainNavbar } from "../home/components/nav/MainNavbar";
 
 const fields: FormikForm.IFormikFormField[] = [
   {
@@ -65,9 +66,16 @@ export const Register = () => {
   };
 
   const formRender = (values: any) => <RegisterCardForm {...values} />;
+  const NAV_ITEMS = [
+    {
+      name: "Home",
+      href: "/",
+    },
+  ];
 
   return (
     <>
+      <MainNavbar items={NAV_ITEMS} />
       <FormikForm.FormikForm
         fields={fields}
         onSubmit={formOnSubmit}

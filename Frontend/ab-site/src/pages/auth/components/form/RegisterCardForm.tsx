@@ -11,6 +11,8 @@ import { BiLock, BiUserCircle } from "react-icons/bi";
 import { AiOutlineMail } from "react-icons/ai";
 
 import "../../auth.scss";
+import { useGlobalState } from "../../../../state";
+import { useEffect } from "react";
 
 interface IProps {
   errors: FormikErrors<FormikValues>;
@@ -20,8 +22,24 @@ interface IProps {
 }
 
 export default ({ errors, status, touched, isSubmitting }: IProps) => {
+  const theme = useGlobalState("theme")[0];
+
+  useEffect(() => {
+    if (theme === "dark") document.body.classList.add("dark-theme");
+
+    return () => {
+      document.body.classList.remove("dark-theme");
+    };
+  });
+
   return (
-    <Card className="shadow-lg rounded ab-center-card">
+    <Card
+      className={
+        theme === "dark"
+          ? "dark-theme shadow-lg rounded ab-center-card"
+          : "shadow-lg rounded ab-center-card"
+      }
+    >
       <Card.Body>
         <Form>
           {status && status.error && (

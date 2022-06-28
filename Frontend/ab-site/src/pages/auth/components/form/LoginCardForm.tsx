@@ -6,8 +6,10 @@ import {
   FormikTouched,
   FormikValues,
 } from "formik";
+import { useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { BiLock, BiUserCircle } from "react-icons/bi";
+import { useGlobalState } from "../../../../state";
 
 import "../../auth.scss";
 
@@ -19,8 +21,24 @@ interface IProps {
 }
 
 export default ({ errors, status, touched, isSubmitting }: IProps) => {
+  const theme = useGlobalState("theme")[0];
+
+  useEffect(() => {
+    if (theme === "dark") document.body.classList.add("dark-theme");
+
+    return () => {
+      document.body.classList.remove("dark-theme");
+    };
+  });
+
   return (
-    <Card className="shadow-lg rounded ab-center-card">
+    <Card
+      className={
+        theme === "dark"
+          ? "dark-theme shadow-lg rounded ab-center-card"
+          : "shadow-lg rounded ab-center-card"
+      }
+    >
       <Card.Body>
         <Form>
           {status && status.error && (

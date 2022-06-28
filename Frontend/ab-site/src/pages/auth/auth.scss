@@ -1,3 +1,23 @@
+@import "../../css/colors.scss";
+
 .lr-l-g {
-	padding-left: 10px;
+  padding-left: 10px;
+}
+
+.ab-center-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.dark-theme {
+  background-color: $projects-section-color-dark;
+  color: #fff;
+}
+
+.light-theme {
+  background-color: #fff;
+  color: $text-color-dark;
 }
