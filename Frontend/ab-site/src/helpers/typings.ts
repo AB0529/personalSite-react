@@ -31,6 +31,14 @@ export interface IDBUser {
   ];
 }
 
+export interface IFile {
+  id: string;
+  name: string;
+  content: Buffer;
+  userId: number;
+  contentType: string;
+}
+
 export interface IApiResponse {
   status: TStatus;
   message: string;

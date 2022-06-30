@@ -17,6 +17,8 @@ import { setDarkTheme, setLightTheme } from "./state/setTheme";
 import HomePage from "./pages/home/home";
 import { LoggedInRoute } from "./pages/auth/components/auth/LoggedInRoute";
 import { AdminRoute } from "./pages/auth/components/auth/AdminRoute";
+import { AdminFiles } from "./pages/admin/adminFiles";
+import { ProfileFiles } from "./pages/profile/profileFiles";
 
 const queryClient = new QueryClient();
 
@@ -49,7 +51,10 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           {/* User profile LOGGED IN ONLY */}
           <Route path="/profile" element={<LoggedInRoute />}>
+            {/* Profile home */}
             <Route path="/profile" element={<Profile />} />
+            {/* Profile files */}
+            <Route path="/profile/files" element={<ProfileFiles />} />
           </Route>
           {/* Admin pages */}
           <Route path="/admin" element={<AdminRoute />}>
@@ -57,6 +62,8 @@ const App = () => {
             <Route path="/admin" element={<AdminHome />} />
             {/* Admin users */}
             <Route path="/admin/users" element={<AdminUsers />} />{" "}
+            {/* Admin files */}
+            <Route path="/admin/files" element={<AdminFiles />} />{" "}
           </Route>
           {/* 404 Page */}
           <Route path="*" element={<NotFound />} />

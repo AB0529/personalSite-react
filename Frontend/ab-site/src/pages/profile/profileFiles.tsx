@@ -4,21 +4,17 @@ import { Container, Table } from "react-bootstrap";
 import { useQuery } from "react-query";
 import config from "../../config/config";
 import getAllFilesLimited from "../../helpers/api/file/getAllFilesLimited";
-import getAllUsersLimited from "../../helpers/api/user/getAllUsersLimited";
+import getAllUserFilesLimited from "../../helpers/api/file/getAllUserFilesLimited";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
-import { IDBUser } from "../../helpers/typings";
+import { IFile } from "../../helpers/typings";
 import { useGlobalState } from "../../state";
 import { MainNavbar } from "../home/components/nav/MainNavbar";
 
-export const AdminUsers = () => {
+export const ProfileFiles = () => {
   const NAV_ITEMS = [
     {
       name: "Home",
       href: "/",
-    },
-    {
-      name: "Users",
-      href: "/admin/users",
     },
     {
       name: "Files",
@@ -30,9 +26,9 @@ export const AdminUsers = () => {
 
   // Get all users
   const { isLoading, isError, data, error } = useQuery(
-    "allUsers",
+    "allUserFiles",
     async () => {
-      return await getAllUsersLimited(token, config.LIMIT_MAX);
+      return await getAllUserFilesLimited(token, config.LIMIT_MAX);
     },
     {
       retry: 1,
@@ -59,25 +55,33 @@ export const AdminUsers = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Roles</th>
-                {/* <th>Password</th> */}
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Content Type</th>
+                <th>Content</th>
               </tr>
             </thead>
             <tbody>
-              {(data?.result as Array<IDBUser>).map((user) => {
+              {(data?.result as Array<IFile>).map((file) => {
                 return (
                   <tr>
-                    <td>{user.id}</td>
-                    <td>{user.username}</td>
-                    <td>{user.firstName}</td>
-                    <td>{user.lastName}</td>
-                    <td>{user.email}</td>
-                    <td>{user.roles.flatMap((a) => a.name + " ")}</td>
-                    {/* <td>{user.password}</td> */}
+                    <td>{file[0]}</td>
+                    {
+                      <td>
+                        <a
+                          href={
+                            file[3].startsWith("image/")
+                              ? `${config.API_URL}/file/view/${file[0]}`
+                              : `${config.API_URL}/file/download/${file[0]}`
+                          }
+                        >
+                          {file[1]}
+                        </a>
+                      </td>
+                    }
+                    <td>{file[2]}</td>
+                    <td>{file[3]}</td>
+                    <td>{file[4]}</td>
                   </tr>
                 );
               })}

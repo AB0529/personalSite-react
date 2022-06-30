@@ -17,6 +17,10 @@ export const AdminHome = () => {
       name: "Users",
       href: "/admin/users",
     },
+    {
+      name: "Files",
+      href: "/admin/files",
+    },
   ];
   const [token] = useStickyState("token");
   const { isError, isLoading, data, error } = useQuery(

@@ -11,6 +11,10 @@ export const Profile = () => {
       name: "Home",
       href: "/",
     },
+    {
+      name: "Files",
+      href: "/profile/files",
+    },
   ];
   const theme = useGlobalState("theme")[0];
 
