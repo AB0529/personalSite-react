@@ -19,6 +19,7 @@ import { LoggedInRoute } from "./pages/auth/components/auth/LoggedInRoute";
 import { AdminRoute } from "./pages/auth/components/auth/AdminRoute";
 import { AdminFiles } from "./pages/admin/adminFiles";
 import { ProfileFiles } from "./pages/profile/profileFiles";
+import { AdminUserEdit } from "./pages/admin/adminUserEdit";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="/admin" element={<AdminHome />} />
             {/* Admin users */}
             <Route path="/admin/users" element={<AdminUsers />} />{" "}
+            <Route path="/admin/users/edit" element={<AdminUserEdit />} />{" "}
             {/* Admin files */}
             <Route path="/admin/files" element={<AdminFiles />} />{" "}
           </Route>

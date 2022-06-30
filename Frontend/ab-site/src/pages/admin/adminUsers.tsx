@@ -1,7 +1,9 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { Button, Container, Table } from "react-bootstrap";
+import { HiPencilAlt } from "react-icons/hi";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import config from "../../config/config";
 import userDelete from "../../helpers/api/auth/userDelete";
 import getAllUsersLimited from "../../helpers/api/user/getAllUsersLimited";
@@ -9,6 +11,7 @@ import { useStickyState } from "../../helpers/hooks/useStickyState";
 import { IDBUser } from "../../helpers/typings";
 import { useGlobalState } from "../../state";
 import { MainNavbar } from "../home/components/nav/MainNavbar";
+import SectionTitle from "../home/components/sections/sectionTitle";
 
 export const AdminUsers = () => {
   const NAV_ITEMS = [
@@ -59,6 +62,7 @@ export const AdminUsers = () => {
   return (
     <>
       <MainNavbar items={NAV_ITEMS} />
+      <SectionTitle title="Users" color="#fff" />
       <Container fluid>
         {isLoading && <h5>...</h5>}
         {isError && <h5>Error: {(error as AxiosError).message}</h5>}
@@ -80,16 +84,28 @@ export const AdminUsers = () => {
               {(data?.result as Array<IDBUser>).map((user) => {
                 return (
                   <tr>
-                    <td>
-                      <Button
-                        variant="danger"
-                        onClick={() => deleteOnClick(user.id)}
-                      >
-                        X
-                      </Button>
+                    <td width={50}>
+                      <Container>
+                        <Button
+                          variant="danger"
+                          onClick={() => deleteOnClick(user.id)}
+                        >
+                          X
+                        </Button>
+                      </Container>
                     </td>
                     <td>{user.id}</td>
-                    <td>{user.username}</td>
+                    <td>
+                      {user.username}{" "}
+                      <Link
+                        to={{
+                          pathname: "/admin/users/edit",
+                        }}
+                        state={user}
+                      >
+                        <HiPencilAlt />
+                      </Link>
+                    </td>
                     <td>{user.firstName}</td>
                     <td>{user.lastName}</td>
                     <td>{user.email}</td>
