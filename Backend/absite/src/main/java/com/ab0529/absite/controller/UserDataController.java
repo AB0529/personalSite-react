@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
@@ -39,8 +40,8 @@ public class UserDataController {
 		return new ApiResponse(HttpStatus.OK, "Users found", users).responseEntity();
 	}
 	@DeleteMapping("delete/{id}")
-	@PreAuthorize("hasRole('USER' OR hasRole('ADMIN')")
-	public ResponseEntity<?> deleteUser(Authentication authentication, @PathVariable Long id) {
+	@PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+	public ResponseEntity<?> deleteUser(Authentication authentication, @PathVariable Long id, HttpServletRequest request ) {
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		Optional<User> dbUser = userRepository.findByUsername(userDetails.getUsername());
 
@@ -48,8 +49,7 @@ public class UserDataController {
 		if (dbUser.isEmpty())
 			return new ApiResponse(HttpStatus.NOT_FOUND, "User not found", null).responseEntity();
 		// Make sure user is owner the file or is an admin
-		if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) &&
-				dbUser.get().getId() == id)
+		if (!request.isUserInRole("ROLE_ADMIN") && dbUser.get().getId() != id)
 			return new ApiResponse(HttpStatus.UNAUTHORIZED, "Unauthorized access", null).responseEntity();
 
 		// Delete the user

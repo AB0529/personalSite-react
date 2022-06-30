@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -138,8 +139,8 @@ public class FileController {
 	}
 
 	@DeleteMapping("delete/{id}")
-	@PreAuthorize("hasRole('USER' OR hasRole('ADMIN')")
-	public ResponseEntity<?> deleteFile(Authentication authentication, @PathVariable UUID id) {
+	@PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+	public ResponseEntity<?> deleteFile(Authentication authentication, @PathVariable UUID id, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		User dbUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
 		Optional<File> file = fileService.findById(id);
@@ -147,9 +148,9 @@ public class FileController {
 		// Make sure file exists
 		if (file.isEmpty())
 			return new ApiResponse(HttpStatus.NOT_FOUND, "File not found", null).responseEntity();
+
 		// Make sure user owns the file or is an admin
-		if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) &&
-				file.get().getUser().getId() != dbUser.getId())
+		if (!request.isUserInRole("ROLE_ADMIN") && file.get().getUser().getId() != dbUser.getId())
 			return new ApiResponse(HttpStatus.UNAUTHORIZED, "Unauthorized access", null).responseEntity();
 
 		// Delete the file
