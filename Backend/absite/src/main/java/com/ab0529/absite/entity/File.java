@@ -1,2 +1,32 @@
-package com.ab0529.absite.entity;public class File {
+package com.ab0529.absite.entity;
+
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.UUID;
+
+@Entity
+@Table(name = "files")
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class File {
+	@Id
+	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")
+	private UUID id;
+
+	@NonNull
+	@Lob
+	private byte[] content;
+	@NonNull
+	private String name;
+	@NonNull
+	private String contentType;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	@NonNull
+	private User user;
 }

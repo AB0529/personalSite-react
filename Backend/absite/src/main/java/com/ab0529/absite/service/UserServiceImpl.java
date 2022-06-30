@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
 	@Autowired
 	UserRepository userRepository;
 
-	@Override
 	@Transactional
 	public Iterable<User> getAllUsersLimited(int max) {
 		return userRepository.findAllLimited(max);
