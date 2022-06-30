@@ -103,10 +103,4 @@ public class AuthController {
 
 		return new ApiResponse(HttpStatus.OK, "User registered successfully!", userRepository.save(user)).responseEntity();
 	}
-
-//	@PostMapping("/logout")
-//	public ResponseEntity<?> logout() {
-//		ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-//		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new ApiResponse(HttpStatus.OK, "You've been signed out!", null));
-//	}
 }

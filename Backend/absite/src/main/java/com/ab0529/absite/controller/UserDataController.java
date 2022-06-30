@@ -2,19 +2,29 @@ package com.ab0529.absite.controller;
 
 import com.ab0529.absite.config.jwt.JwtUtils;
 import com.ab0529.absite.entity.User;
-import com.ab0529.absite.model.ApiResponse;
+import com.ab0529.absite.model.*;
 import com.ab0529.absite.repository.UserRepository;
+import com.ab0529.absite.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
@@ -23,6 +33,10 @@ public class UserDataController {
 	private UserRepository userRepository;
 	@Autowired
 	private JwtUtils jwtUtils;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Autowired
+	private PasswordEncoder bcryptEncoder;
 
 	@GetMapping()
 	@PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
@@ -57,4 +71,24 @@ public class UserDataController {
 
 		return new ApiResponse(HttpStatus.OK, "User deleted", null).responseEntity();
 	}
+
+	@PostMapping("/admin/update")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> adminUpdate(@RequestBody UserUpdateModel userUpdateModel, HttpServletRequest request) {
+		User dbuser = userRepository.findByUsername(userUpdateModel.getOldUsername()).orElseThrow();
+		// Update user
+		dbuser.setUsername(userUpdateModel.getUsername());
+		dbuser.setEmail(userUpdateModel.getEmail());
+		dbuser.setFirstName(userUpdateModel.getFirstName());
+		dbuser.setLastName(userUpdateModel.getLastName());
+
+		System.out.println(userUpdateModel.getPassword());
+		if (!userUpdateModel.getPassword().isEmpty())
+			dbuser.setPassword(bcryptEncoder.encode(userUpdateModel.getPassword()));
+
+		userRepository.save(dbuser);
+
+		return new ApiResponse(HttpStatus.OK, "User has been updated", null).responseEntity();
+	}
+
 }

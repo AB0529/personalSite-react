@@ -69,11 +69,30 @@ public class JwtUtils {
 				.compact();
 	}
 
+	public String generateJwtTokenNoAuthentication(String username) {
+		return Jwts.builder()
+				.setSubject(username)
+				.setIssuedAt(new Date())
+				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+				.signWith(SignatureAlgorithm.HS512, jwtSecret)
+				.compact();
+	}
+
 	public String generateJwtTokenWithClaims(Authentication authentication, Map<String, Object> claims) {
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 		return Jwts.builder()
 				.setClaims(claims)
 				.setSubject((userPrincipal.getUsername()))
+				.setIssuedAt(new Date())
+				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+				.signWith(SignatureAlgorithm.HS512, jwtSecret)
+				.compact();
+	}
+
+	public String generateJwtTokenWithClaimsNoAuthentication(String username, Map<String, Object> claims) {
+		return Jwts.builder()
+				.setClaims(claims)
+				.setSubject(username)
 				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)
