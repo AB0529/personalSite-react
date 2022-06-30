@@ -7,6 +7,9 @@ export default (token: string, id: string): Promise<IApiResponse> => {
     .delete(`${config.API_URL}/file/delete/${id}`, {
       headers: {
         Authentication: token,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers":
+          "Origin, X-Requested-With, Content-Type, Accept",
       },
     })
     .then((res) => Promise.resolve(res.data))

@@ -9,6 +9,9 @@ export default (token: string, id: number): Promise<string> => {
       .get(`${config.API_URL}/file/id/${id}`, {
         headers: {
           Authentication: token,
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers":
+            "Origin, X-Requested-With, Content-Type, Accept",
         },
       })
       .then((resp) => {

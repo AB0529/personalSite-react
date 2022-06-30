@@ -8,6 +8,9 @@ export default (token: string, formData: FormData): Promise<IApiResponse> => {
       headers: {
         Authentication: token,
         "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers":
+          "Origin, X-Requested-With, Content-Type, Accept",
       },
     })
     .then((res) => Promise.resolve(res.data))

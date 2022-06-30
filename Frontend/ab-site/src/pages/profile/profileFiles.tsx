@@ -79,6 +79,9 @@ export const ProfileFiles = () => {
       method: "GET",
       headers: {
         Authentication: token,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers":
+          "Origin, X-Requested-With, Content-Type, Accept",
       },
     })
       .then((resp) =>
