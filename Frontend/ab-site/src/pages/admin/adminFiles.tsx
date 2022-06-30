@@ -74,8 +74,8 @@ export const AdminFiles = () => {
                         <a
                           href={
                             file[3].startsWith("image/")
-                              ? `${config.API_URL}/file/view/${file[0]}`
-                              : `${config.API_URL}/file/download/${file[0]}`
+                              ? `${config.API_URL}/file/v/${file[0]}`
+                              : `${config.API_URL}/file/d/${file[0]}`
                           }
                         >
                           {file[1]}
