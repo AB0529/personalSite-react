@@ -87,6 +87,7 @@ export const AdminUserEdit = () => {
       user.username,
       password,
       email,
+      user.email,
       firstName,
       lastName
     )

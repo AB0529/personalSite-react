@@ -13,7 +13,7 @@ export default (
 ) => {
   return axios
     .post(
-      `${config.API_URL}/user/admin/update`,
+      `${config.API_URL}/user/update`,
       {
         username,
         oldUsername,
