@@ -66,11 +66,17 @@ public class FileController {
 	}
 	@GetMapping("d/{id}")
 	@PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
-	public ResponseEntity<Resource> downloadFileByName(@PathVariable UUID id) {
+	public ResponseEntity<Resource> downloadFileByName(Authentication authentication, @PathVariable UUID id) {
 		Optional<File> file = fileService.findById(id);
-		// Could not find file or unauthorized
+		// Could not find file
 		if (file.isEmpty())
 			return (ResponseEntity<Resource>) new ApiResponse(HttpStatus.NOT_FOUND, "File not found", null).responseEntity();
+
+		// Make sure user owns the file
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+		if (!file.get().getUser().getUsername().equals(userDetails.getUsername()))
+			return (ResponseEntity<Resource>) new ApiResponse(HttpStatus.UNAUTHORIZED, "Unauthorized access", null).responseEntity();
 
 		byte[] f = file.get().getContent();
 		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(f));

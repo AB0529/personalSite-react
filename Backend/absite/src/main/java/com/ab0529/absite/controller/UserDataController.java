@@ -74,9 +74,38 @@ public class UserDataController {
 
 	@PostMapping("/admin/update")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> adminUpdate(@RequestBody UserUpdateModel userUpdateModel, HttpServletRequest request) {
+	public ResponseEntity<?> adminUpdate(@RequestBody UserUpdateModel userUpdateModel) {
 		User dbuser = userRepository.findByUsername(userUpdateModel.getOldUsername()).orElseThrow();
 		// Update user
+		dbuser.setUsername(userUpdateModel.getUsername());
+		dbuser.setEmail(userUpdateModel.getEmail());
+		dbuser.setFirstName(userUpdateModel.getFirstName());
+		dbuser.setLastName(userUpdateModel.getLastName());
+
+		System.out.println(userUpdateModel.getPassword());
+		if (!userUpdateModel.getPassword().isEmpty())
+			dbuser.setPassword(bcryptEncoder.encode(userUpdateModel.getPassword()));
+
+		userRepository.save(dbuser);
+
+		return new ApiResponse(HttpStatus.OK, "User has been updated", null).responseEntity();
+	}
+
+	@PostMapping("/update")
+	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER')")
+	public ResponseEntity<?> userUpdate(@RequestBody UserUpdateModel userUpdateModel) {
+		User dbuser = userRepository.findByUsername(userUpdateModel.getOldUsername()).orElseThrow();
+		// Make sure user is editing own user
+		if (!dbuser.getUsername().equals(userUpdateModel.getOldUsername()))
+			return new ApiResponse(HttpStatus.UNAUTHORIZED, "Unauthorized update", null).responseEntity();
+		// Update user
+
+		// Make sure username is not taken
+		if (!userUpdateModel.getOldUsername().equals(userUpdateModel.getUsername()) && userRepository.existsByUsername(userUpdateModel.getUsername()))
+			return new ApiResponse(HttpStatus.BAD_REQUEST, "Username is already in use", null).responseEntity();
+		// Make sure email is not taken
+		if (!userUpdateModel.getOldEmail().equals(userUpdateModel.getEmail()) && userRepository.existsByEmail(userUpdateModel.getEmail()))
+			return new ApiResponse(HttpStatus.BAD_REQUEST, "Email is already in use", null).responseEntity();
 		dbuser.setUsername(userUpdateModel.getUsername());
 		dbuser.setEmail(userUpdateModel.getEmail());
 		dbuser.setFirstName(userUpdateModel.getFirstName());
