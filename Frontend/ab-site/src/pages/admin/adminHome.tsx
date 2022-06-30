@@ -5,7 +5,9 @@ import { useQuery } from "react-query";
 import getUser from "../../helpers/api/user/getUser";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
 import { useGlobalState } from "../../state";
+import LoadingPage from "../auth/components/LoadingPage";
 import { MainNavbar } from "../home/components/nav/MainNavbar";
+import SectionTitle from "../home/components/sections/sectionTitle";
 
 export const AdminHome = () => {
   const NAV_ITEMS = [
@@ -43,13 +45,9 @@ export const AdminHome = () => {
     <>
       <MainNavbar items={NAV_ITEMS} />
       <Container fluid>
-        {isLoading && <h1>...</h1>}
+        {isLoading && <LoadingPage />}
         {isError && <h1>{(error as AxiosError).message}</h1>}
-        {data && (
-          <h1>
-            Welcome {data?.result.firstName} {data?.result.lastName}
-          </h1>
-        )}
+        <SectionTitle title="Admin Panel" color="#bf1194" />
       </Container>
     </>
   );
