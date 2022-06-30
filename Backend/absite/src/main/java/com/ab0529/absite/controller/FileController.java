@@ -6,12 +6,12 @@ import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.repository.UserRepository;
 import com.ab0529.absite.service.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -135,5 +135,26 @@ public class FileController {
 		fileService.save(dbFile);
 
 		return new ApiResponse(HttpStatus.OK, "File added", dbFile).responseEntity();
+	}
+
+	@DeleteMapping("delete/{id}")
+	@PreAuthorize("hasRole('USER' OR hasRole('ADMIN')")
+	public ResponseEntity<?> deleteFile(Authentication authentication, @PathVariable UUID id) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		User dbUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+		Optional<File> file = fileService.findById(id);
+
+		// Make sure file exists
+		if (file.isEmpty())
+			return new ApiResponse(HttpStatus.NOT_FOUND, "File not found", null).responseEntity();
+		// Make sure user owns the file or is an admin
+		if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) &&
+				file.get().getUser().getId() != dbUser.getId())
+			return new ApiResponse(HttpStatus.UNAUTHORIZED, "Unauthorized access", null).responseEntity();
+
+		// Delete the file
+		fileService.deleteById(id);
+
+		return new ApiResponse(HttpStatus.OK, "File deleted", null).responseEntity();
 	}
 }

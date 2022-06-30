@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String username);
 	Optional<User> findByEmail(String email);
 	Boolean existsByUsername(String username);

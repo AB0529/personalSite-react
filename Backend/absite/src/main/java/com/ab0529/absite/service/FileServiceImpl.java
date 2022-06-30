@@ -39,4 +39,8 @@ public class FileServiceImpl {
 	public Iterable<Object> findAllByIdLimited(long id, int max) {
 		return fileRepository.findAllByIdLimited(id, max);
 	}
+
+	public void deleteById(UUID id) {
+		fileRepository.deleteById(id);
+	}
 }
