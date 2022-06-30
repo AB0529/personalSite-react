@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { useQuery } from "react-query";
 import config from "../../config/config";
+import fileDelete from "../../helpers/api/file/fileDelete";
 import getAllFilesLimited from "../../helpers/api/file/getAllFilesLimited";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
 import { IFile } from "../../helpers/typings";
@@ -47,6 +48,14 @@ export const AdminFiles = () => {
     };
   });
 
+  const deleteOnClick = (id: string) => {
+    fileDelete(token, id)
+      .then((r) => {
+        alert(r.message);
+      })
+      .catch((e: AxiosError) => alert(e.message));
+  };
+
   return (
     <>
       <MainNavbar items={NAV_ITEMS} />
@@ -57,6 +66,7 @@ export const AdminFiles = () => {
           <Table striped bordered hover variant={theme}>
             <thead>
               <tr>
+                <th></th>
                 <th>#</th>
                 <th>Name</th>
                 <th>Owner</th>
@@ -68,6 +78,14 @@ export const AdminFiles = () => {
               {(data?.result as Array<IFile>).map((file) => {
                 return (
                   <tr>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteOnClick(file[0])}
+                      >
+                        X
+                      </Button>
+                    </td>
                     <td>{file[0]}</td>
                     {
                       <td>

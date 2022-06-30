@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { useQuery } from "react-query";
 import config from "../../config/config";
+import fileDelete from "../../helpers/api/file/fileDelete";
 import getAllFilesLimited from "../../helpers/api/file/getAllFilesLimited";
 import getAllUserFilesLimited from "../../helpers/api/file/getAllUserFilesLimited";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
@@ -23,6 +24,13 @@ export const ProfileFiles = () => {
   ];
 
   const [token] = useStickyState("token");
+  const deleteOnClick = (id: string) => {
+    fileDelete(token, id)
+      .then((r) => {
+        alert(r.message);
+      })
+      .catch((e: AxiosError) => alert(e.message));
+  };
 
   // Get all users
   const { isLoading, isError, data, error } = useQuery(
@@ -54,6 +62,7 @@ export const ProfileFiles = () => {
           <Table striped bordered hover variant={theme}>
             <thead>
               <tr>
+                <th></th>
                 <th>#</th>
                 <th>Name</th>
                 <th>Owner</th>
@@ -65,6 +74,14 @@ export const ProfileFiles = () => {
               {(data?.result as Array<IFile>).map((file) => {
                 return (
                   <tr>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteOnClick(file[0])}
+                      >
+                        X
+                      </Button>
+                    </td>
                     <td>{file[0]}</td>
                     {
                       <td>

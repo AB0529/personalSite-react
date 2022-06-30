@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import { useEffect } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { useQuery } from "react-query";
 import config from "../../config/config";
-import getAllFilesLimited from "../../helpers/api/file/getAllFilesLimited";
+import userDelete from "../../helpers/api/auth/userDelete";
 import getAllUsersLimited from "../../helpers/api/user/getAllUsersLimited";
 import { useStickyState } from "../../helpers/hooks/useStickyState";
 import { IDBUser } from "../../helpers/typings";
@@ -48,6 +48,14 @@ export const AdminUsers = () => {
     };
   });
 
+  const deleteOnClick = (id: number) => {
+    userDelete(token, id)
+      .then((r) => {
+        alert(r.message);
+      })
+      .catch((e: AxiosError) => alert(e.message));
+  };
+
   return (
     <>
       <MainNavbar items={NAV_ITEMS} />
@@ -58,6 +66,7 @@ export const AdminUsers = () => {
           <Table striped bordered hover variant={theme}>
             <thead>
               <tr>
+                <th></th>
                 <th>#</th>
                 <th>Username</th>
                 <th>First Name</th>
@@ -71,6 +80,14 @@ export const AdminUsers = () => {
               {(data?.result as Array<IDBUser>).map((user) => {
                 return (
                   <tr>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteOnClick(user.id)}
+                      >
+                        X
+                      </Button>
+                    </td>
                     <td>{user.id}</td>
                     <td>{user.username}</td>
                     <td>{user.firstName}</td>
