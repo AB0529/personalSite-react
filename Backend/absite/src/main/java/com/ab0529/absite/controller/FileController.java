@@ -43,7 +43,7 @@ public class FileController {
 		return new ApiResponse(HttpStatus.OK, "File found", file).responseEntity();
 	}
 
-	@GetMapping(value = "view/{id}", produces = {
+	@GetMapping(value = "v/{id}", produces = {
 			MediaType.IMAGE_PNG_VALUE,
 			MediaType.IMAGE_JPEG_VALUE,
 			MediaType.IMAGE_GIF_VALUE,
@@ -56,14 +56,14 @@ public class FileController {
 
 		// Make sure content is an image
 		if (!file.get().getContentType().toString().startsWith("image/"))
-			return (ResponseEntity<Resource>) new ApiResponse(HttpStatus.NOT_ACCEPTABLE, "File is not a image. Non images goto /download", null).responseEntity();
+			return (ResponseEntity<Resource>) new ApiResponse(HttpStatus.NOT_ACCEPTABLE, "File is not a image. Non images goto /d", null).responseEntity();
 
 		byte[] f = file.get().getContent();
 		InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(f));
 
 		return ResponseEntity.ok().contentLength(f.length).body(resource);
 	}
-	@GetMapping("download/{id}")
+	@GetMapping("d/{id}")
 	@PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
 	public ResponseEntity<Resource> downloadFileByName(@PathVariable UUID id) {
 		Optional<File> file = fileService.findById(id);
