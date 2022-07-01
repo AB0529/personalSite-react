@@ -27,7 +27,6 @@ public class WebSecurityConfig {
 
 	/**
 	 * Unauthorized routes: /api/auth/**
-	 * TODO: implement JWT
 	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
