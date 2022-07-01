@@ -25,6 +25,7 @@ public class UserController {
 	UserService userService;
 
 	Logger logger = LoggerFactory.getLogger(UserController.class);
+	// TODO: implement user details grabbing
 
 	/*
 	* DELETE USER
