@@ -1,6 +1,7 @@
 package com.ab0529.absite.entity;
 
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Transactional
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

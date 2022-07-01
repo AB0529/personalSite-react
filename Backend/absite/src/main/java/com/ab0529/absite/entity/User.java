@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @DynamicUpdate
+@Transactional
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +47,7 @@ public class User {
     @NonNull
     private String email;
 
-    @ManyToMany(cascade = { CascadeType.REFRESH })
+    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = { @JoinColumn(name = "user_id") },

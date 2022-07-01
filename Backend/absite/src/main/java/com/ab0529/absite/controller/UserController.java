@@ -30,10 +30,10 @@ public class UserController {
 	/*
 	* GET ALL USERS LIMIT
 	* Retries all users up to limit
-	* ROLE_ADMIN or ROLE_USER_EDIT can access this route
+	* ROLE_ADMIN or USER_EDIT_AUTHORITY can access this route
 	*/
 	@GetMapping("/admin/all/{max}")
-	@PreAuthorize("hasRole('ADMIN') or hasRole('USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') or hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminViewAllUsersLimited(@PathVariable int max) {
 		logger.info("GET /api/users/admin/all/"+max);
 		Page<User> users = userService.findAllLimit(max);
@@ -49,11 +49,11 @@ public class UserController {
 	* GET USER DETAILS FROM ID
 	* Retrieves User from user id
 	* ROLE_USER can only access themselves
-	* ROLE_ADMIN or ROLE_USER_EDIT can access any user
+	* ROLE_ADMIN or USER_EDIT_AUTHORITY can access any user
 	*/
 
 	@GetMapping("/admin/{id}")
-	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminViewUser(@PathVariable Long id) {
 		logger.info("GET /api/users/admin/"+id);
 		return handleViewUser(id);
@@ -92,10 +92,10 @@ public class UserController {
 	* DELETE USER
 	* Handles user deletion
 	* ROLE_USER can only delete themselves
-	* ROLE_USER_DELETE or ROLE_ADMIN can delete any user
+	* USER_DELETE_AUTHORITY or ROLE_ADMIN can delete any user
 	*/
 	@DeleteMapping("/admin/delete/{id}")
-	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_DELETE')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_DELETE')")
 	public ResponseEntity<?> deleteAnyUser(@PathVariable Long id) {
 		logger.info("DELETE /api/users/admin/delete/"+id);
 		return handleDeleteUser(id);

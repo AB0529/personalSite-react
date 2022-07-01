@@ -6,17 +6,21 @@ public enum ERole {
 	// Superuser can do anything
 	ROLE_ADMIN,
 	// Allows for deletion of other users
-	ROLE_USER_DELETE,
+	USER_DELETE_AUTHORITY,
 	// Allows for editing of other users
-	ROLE_USER_EDIT,
+	USER_EDIT_AUTHORITY,
 	// Allows for adding roles to other users (except ROLE_ADMIN)
-	ROLE_USER_ROLE_ADD,
+	USER_ROLE_ADD_AUTHORITY,
+	// Allows for adding auth to other users
+	USER_AUTH_ADD_AUTHORITY,
 	// Allows for removing roles from other users (except ROLE_ADMIN)
-	ROLE_USER_ROLE_REMOVE,
+	USER_ROLE_REMOVE_AUTHORITY,
+	// Allows for removing auth from other users
+	USER_AUTH_REMOVE_AUTHORITY,
 	// Allows for adding ROLE_ADMIN to other users
-	ROLE_ADMIN_ROLE_ADD,
+	ADMIN_ROLE_ADD_AUTHORITY,
 	// Allows for removing ROLE_ADMIN from other users
-	ROLE_ADMIN_ROLE_REMOVE,
+	ADMIN_ROLE_REMOVE_AUTHORITY,
 	// Allows for deletion of other users file's
-	ROLE_USER_FILE_REMOVE
+	USER_FILE_REMOVE_AUTHORITY
 }

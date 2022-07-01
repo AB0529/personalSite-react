@@ -1,8 +1,13 @@
 package com.ab0529.absite.component;
 
+import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.CustomUserDetails;
 import com.ab0529.absite.service.JwtUserDetailsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -26,7 +32,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+			throws IOException
+	{
 		final String requestTokenHeader = request.getHeader("Authorization");
 
 		String username = null;
@@ -36,8 +43,30 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (Exception e) {
+			} catch (ExpiredJwtException e) {
 				logger.warn("Cannot set user authentication: {}", e);
+				PrintWriter out = response.getWriter();
+				ApiResponse re = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: token expired");
+				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+				String respStr = ow.writeValueAsString(re);
+
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+
+				out.print(respStr);
+				out.flush();
+			}
+			catch (Exception e) {
+				PrintWriter out = response.getWriter();
+				ApiResponse re = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage());
+				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+				String respStr = ow.writeValueAsString(re);
+
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+
+				out.print(respStr);
+				out.flush();
 			}
 		} else {
 			logger.warn("JWT Token does not begin with Bearer String");
@@ -50,10 +79,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			// Make sure remote-address matches
 			String tokenRemoteAddr = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("remote-address"));
 			if (tokenRemoteAddr.equals(request.getRemoteAddr())) {
+				logger.warn("Remote address matches");
 				// if token is valid configure Spring Security to manually set authentication
 				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
+
+					logger.info(userDetails.getAuthorities());
 
 					usernamePasswordAuthenticationToken
 							.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -64,6 +96,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				}
 			}
 		}
-		filterChain.doFilter(request, response);
+		try {
+			filterChain.doFilter(request, response);
+		} catch (ServletException e) {
+			logger.warn("ServetletException: " + e.getMessage());
+		}
 	}
 }

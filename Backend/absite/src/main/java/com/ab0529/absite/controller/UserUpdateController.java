@@ -34,13 +34,13 @@ public class UserUpdateController {
 	/*
 	* UPDATE USER
 	* Updates user with new user object
-	* ROLE_ADMIN or ROLE_USER_EDIT can update any user
+	* ROLE_ADMIN or USER_EDIT_AUTHORITY can update any user
 	* ROLE_USER can only update themselves
 	* TODO: add role updating
 	*/
 
 	@PatchMapping("/admin/update")
-	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminUpdateUserPart(@RequestBody UserUpdateRequest newUser) {
 		logger.info("PATCH /api/users/admin/update");
 		if (newUser.getId() == null)

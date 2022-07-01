@@ -17,4 +17,8 @@ public class RoleService {
 	public Optional<Role> findByName(ERole name) {
 		return roleRepository.findByName(name);
 	}
+
+	public Optional<Role> findById(Long roleId) {
+		return roleRepository.findById(roleId);
+	}
 }
