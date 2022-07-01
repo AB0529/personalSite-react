@@ -30,6 +30,6 @@ public class ApiResponse {
 	}
 
 	public ResponseEntity<?> asResponseEntity() {
-		return new ResponseEntity<>(new ApiResponse(status, code, message, result), status);
+		return new ResponseEntity<>(new ApiResponse(status, status.value(), message, result), status);
 	}
 }

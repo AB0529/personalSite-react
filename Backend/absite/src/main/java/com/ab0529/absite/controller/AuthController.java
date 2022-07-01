@@ -103,6 +103,7 @@ public class AuthController {
 
 			// Add role to user
 			user.addRole(userRole.get());
+			userService.save(user);
 
 			return new ApiResponse(HttpStatus.OK, "registration successful", user).asResponseEntity();
 		} catch (Exception e) {
