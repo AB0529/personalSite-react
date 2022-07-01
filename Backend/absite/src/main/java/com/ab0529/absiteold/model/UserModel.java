@@ -1,16 +1,14 @@
-package com.ab0529.absite.model;
+package com.ab0529.absiteold.model;
 
 import lombok.Data;
 import lombok.Getter;
 
 @Data
 @Getter
-public class UserUpdateModel {
+public class UserModel {
 	private String username;
-	private String oldUsername;
 	private String password;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String oldEmail;
 }

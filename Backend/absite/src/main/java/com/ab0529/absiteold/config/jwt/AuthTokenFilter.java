@@ -1,6 +1,6 @@
-package com.ab0529.absite.config.jwt;
+package com.ab0529.absiteold.config.jwt;
 
-import com.ab0529.absite.service.UserDetailsServiceImpl;
+import com.ab0529.absiteold.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

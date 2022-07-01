@@ -1,7 +1,7 @@
-package com.ab0529.absite.repository;
+package com.ab0529.absiteold.repository;
 
-import com.ab0529.absite.entity.ERole;
-import com.ab0529.absite.entity.Role;
+import com.ab0529.absiteold.entity.ERole;
+import com.ab0529.absiteold.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

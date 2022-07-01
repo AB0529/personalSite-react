@@ -1,4 +1,4 @@
-package com.ab0529.absite.model;
+package com.ab0529.absiteold.model;
 
 import lombok.Data;
 import lombok.Getter;

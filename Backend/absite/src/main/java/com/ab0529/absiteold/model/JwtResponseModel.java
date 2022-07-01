@@ -1,9 +1,7 @@
-package com.ab0529.absite.model;
+package com.ab0529.absiteold.model;
 
 import lombok.*;
-import org.springframework.http.ResponseCookie;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 @Getter

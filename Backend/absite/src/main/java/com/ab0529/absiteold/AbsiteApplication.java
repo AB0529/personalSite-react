@@ -1,4 +1,4 @@
-package com.ab0529.absite;
+package com.ab0529.absiteold;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,14 +1,12 @@
-package com.ab0529.absite.repository;
+package com.ab0529.absiteold.repository;
 
-import com.ab0529.absite.entity.File;
-import com.ab0529.absite.entity.User;
+import com.ab0529.absiteold.entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

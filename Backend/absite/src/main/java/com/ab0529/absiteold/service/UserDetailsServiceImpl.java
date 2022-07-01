@@ -1,8 +1,7 @@
-package com.ab0529.absite.service;
+package com.ab0529.absiteold.service;
 
-import com.ab0529.absite.config.jwt.JwtUtils;
-import com.ab0529.absite.entity.User;
-import com.ab0529.absite.repository.UserRepository;
+import com.ab0529.absiteold.entity.User;
+import com.ab0529.absiteold.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

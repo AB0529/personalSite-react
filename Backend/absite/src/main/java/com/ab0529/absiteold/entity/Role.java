@@ -1,4 +1,4 @@
-package com.ab0529.absite.entity;
+package com.ab0529.absiteold.entity;
 
 import lombok.*;
 

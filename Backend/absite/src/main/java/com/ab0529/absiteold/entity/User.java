@@ -1,12 +1,11 @@
-package com.ab0529.absite.entity;
+package com.ab0529.absiteold.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints ={

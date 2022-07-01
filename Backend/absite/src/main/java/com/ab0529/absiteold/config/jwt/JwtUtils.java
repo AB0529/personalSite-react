@@ -1,7 +1,7 @@
-package com.ab0529.absite.config.jwt;
+package com.ab0529.absiteold.config.jwt;
 
 
-import com.ab0529.absite.service.UserDetailsImpl;
+import com.ab0529.absiteold.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,6 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component

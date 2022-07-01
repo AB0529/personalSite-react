@@ -1,4 +1,4 @@
-package com.ab0529.absite.config.jwt;
+package com.ab0529.absiteold.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

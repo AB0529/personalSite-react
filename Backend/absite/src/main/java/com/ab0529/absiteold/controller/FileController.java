@@ -1,17 +1,16 @@
-package com.ab0529.absite.controller;
+package com.ab0529.absiteold.controller;
 
-import com.ab0529.absite.entity.File;
-import com.ab0529.absite.entity.User;
-import com.ab0529.absite.model.ApiResponse;
-import com.ab0529.absite.repository.UserRepository;
-import com.ab0529.absite.service.FileServiceImpl;
+import com.ab0529.absiteold.entity.File;
+import com.ab0529.absiteold.entity.User;
+import com.ab0529.absiteold.model.ApiResponse;
+import com.ab0529.absiteold.repository.UserRepository;
+import com.ab0529.absiteold.service.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

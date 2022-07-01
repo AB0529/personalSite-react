@@ -1,4 +1,4 @@
-package com.ab0529.absite;
+package com.ab0529.absiteold;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

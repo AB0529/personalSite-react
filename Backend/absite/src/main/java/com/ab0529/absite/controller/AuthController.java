@@ -1,105 +1,57 @@
 package com.ab0529.absite.controller;
 
-import com.ab0529.absite.config.jwt.JwtUtils;
-import com.ab0529.absite.entity.ERole;
-import com.ab0529.absite.entity.File;
-import com.ab0529.absite.entity.Role;
-import com.ab0529.absite.entity.User;
+import com.ab0529.absite.component.JwtTokenUtil;
 import com.ab0529.absite.model.ApiResponse;
-import com.ab0529.absite.model.JwtResponseModel;
-import com.ab0529.absite.model.LoginModel;
-import com.ab0529.absite.model.UserModel;
-import com.ab0529.absite.repository.RoleRepository;
-import com.ab0529.absite.repository.UserRepository;
-import com.ab0529.absite.service.UserDetailsImpl;
-import io.jsonwebtoken.Claims;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ab0529.absite.model.LoginRequest;
+import com.ab0529.absite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.stream.Collectors;
 
-@Controller
+/**
+ * Auth route controller
+ * Routes: /api/auth/login, /api/auth/register
+ */
+@RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private RoleRepository roleRepository;
-	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
-	private PasswordEncoder bcryptEncoder;
+	private JwtTokenUtil jwtTokenUtil;
 	@Autowired
-	private JwtUtils jwtUtils;
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private UserService userService;
 
+	/**
+	 * LOGIN
+	 * Handles login authentication
+	 */
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginModel loginModel, HttpServletRequest request) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginModel.getUsername(), loginModel.getPassword()));
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		Map<String, Object> claims = new HashMap<>();
-
-		claims.put("ip", request.getRemoteAddr());
-
-		String jwt = jwtUtils.generateJwtTokenWithClaims(authentication, claims);
-
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
-
-		return new ApiResponse(HttpStatus.OK, "Authentication successful!", new JwtResponseModel(
-						userDetails.getUsername(),
-						userDetails.getEmail(),
-						userDetails.getLastName(),
-						userDetails.getLastName(),
-						roles,
-						jwt
-				)).responseEntity();
-	}
-
-	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody UserModel userModel) {
-		// Make sure username is not taken
-		if (userRepository.existsByUsername(userModel.getUsername()))
-			return new ApiResponse(HttpStatus.BAD_REQUEST, "Error: Username is already taken!", null).responseEntity();
-		// Make sure email is not taken
-		if (userRepository.existsByEmail(userModel.getEmail()))
-			return new ApiResponse(HttpStatus.BAD_REQUEST, "Error: Email is already in use!", null).responseEntity();
-
-		// Create the new account
-		User user = new User(
-				userModel.getUsername(),
-				bcryptEncoder.encode(userModel.getPassword()),
-				userModel.getFirstName(),
-				userModel.getLastName(),
-				userModel.getEmail());
-
-		// Assign roles
-		Role userRoll = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role not found!"));
-		user.addRole(userRoll);
-
-		return new ApiResponse(HttpStatus.OK, "User registered successfully!", userRepository.save(user)).responseEntity();
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+			// Load user
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+			// Generate JwtToken with ip claim
+			final String token = jwtTokenUtil.generateTokenWithRemoteAddrClaim(userDetails, request.getRemoteAddr());
+			// Return token if authentication was successful
+			return new ApiResponse(HttpStatus.OK, "authentication successful", token).asResponseEntity();
+		} catch (DisabledException e) {
+			return new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: user is disabled").asResponseEntity();
+		} catch (BadCredentialsException e) {
+			return new ApiResponse(HttpStatus.FORBIDDEN, "error: bad credentials").asResponseEntity();
+		}
 	}
 }
