@@ -7,9 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "token_blacklist", uniqueConstraints ={
-		@UniqueConstraint(columnNames =  "token"),
-})
+@Table(name = "token_blacklist")
 @Getter
 @Setter
 @AllArgsConstructor

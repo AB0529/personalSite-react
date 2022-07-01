@@ -5,6 +5,8 @@ public enum ERole {
 	ROLE_USER,
 	// Superuser can do anything
 	ROLE_ADMIN,
+	// File service user
+	ROLE_FILE_USER,
 	// Allows for deletion of other users
 	USER_DELETE,
 	// Allows for editing of other users
@@ -22,5 +24,13 @@ public enum ERole {
 	// Allows for removing ROLE_ADMIN from other users
 	ADMIN_ROLE_REMOVE,
 	// Allows for deletion of other users file's
-	USER_FILE_REMOVE
+	USER_FILE_REMOVE,
+	// Allows for banning of users
+	USER_BAN_ADD,
+	// Allows for unbanning of users
+	USER_BAN_REMOVE,
+	// Allows for full control of banned users
+	USER_BAN,
+	// Allows for viewing banned users
+	USER_BAN_VIEW,
 }

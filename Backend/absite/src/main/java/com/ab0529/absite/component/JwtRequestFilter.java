@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -85,10 +86,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			String tokenIpAndAgent = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("ip-and-agent"));
 			String ipAndAgent = request.getRemoteAddr() + request.getHeader("User-Agent");
 			// Make sure token is not in blacklist
-			Optional<TokenBlacklist> blToken = tokenBlacklistService.findByToken(jwtToken);
+			Boolean blToken = tokenBlacklistService.existsByToken(jwtToken);
 
-			if (blToken.isPresent())
-				logger.warn("Blacklisted token: " + blToken.get());
+			if (blToken)
+				logger.warn("Blacklisted user: " + username);
 			else if (tokenIpAndAgent.equals(ipAndAgent)) {
 				// if token is valid configure Spring Security to manually set authentication
 				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {

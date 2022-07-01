@@ -29,7 +29,7 @@ public class UserRoleController {
 	private final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
 	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: role exists on user").asResponseEntity();
 
-	Logger logger = LoggerFactory.getLogger(UserController.class);
+	Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
 	/*
 	* ADD ROLE
@@ -74,9 +74,9 @@ public class UserRoleController {
 	}
 
 	/*
-	 * ADD ROLE
-	 * Adds a role to any user
-	 * Must have ROLE_ADMIN or USER_EDIT_AUTHORITY or USER_ROLE_ADD_AUTHORITY
+	 * REMOVE ROLE
+	 * Removes a role from any user
+	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE
 	 */
 	@DeleteMapping("/roles/remove/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")

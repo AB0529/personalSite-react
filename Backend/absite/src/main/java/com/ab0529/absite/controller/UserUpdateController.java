@@ -30,7 +30,7 @@ public class UserUpdateController {
 	private final ResponseEntity<?> UPDATE_SUCCESS = new ApiResponse(HttpStatus.OK, "successfully updated user").asResponseEntity();
 	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
 
-	Logger logger = LoggerFactory.getLogger(UserController.class);
+	Logger logger = LoggerFactory.getLogger(UserUpdateController.class);
 	/*
 	* UPDATE USER
 	* Updates user with new user object
