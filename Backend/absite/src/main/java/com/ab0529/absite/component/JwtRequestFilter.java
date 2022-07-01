@@ -1,5 +1,7 @@
 package com.ab0529.absite.component;
 
+import com.ab0529.absite.model.CustomUserDetails;
+import com.ab0529.absite.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +20,7 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private JwtUserDetailsService userDetailsService;
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -43,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		// Once we get the token validate it
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
 			// Make sure remote-address matches
 			String tokenRemoteAddr = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("remote-address"));

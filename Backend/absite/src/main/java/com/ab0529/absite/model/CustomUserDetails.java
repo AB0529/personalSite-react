@@ -3,12 +3,13 @@ package com.ab0529.absite.model;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
-@Data
 public class CustomUserDetails extends User {
 	private final long id;
 
@@ -19,5 +20,10 @@ public class CustomUserDetails extends User {
 	{
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.id = userID;
+	}
+
+	public CustomUserDetails(String username, String password, List<SimpleGrantedAuthority> authorities, long id) {
+		super(username, password, true, true, true, true, authorities);
+		this.id = id;
 	}
 }

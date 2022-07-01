@@ -1,6 +1,7 @@
 package com.ab0529.absite.service;
 
 import com.ab0529.absite.entity.User;
+import com.ab0529.absite.model.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +19,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 	UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("user not found"));
 		// User's authorities
 		List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName().name())).toList();
 
-		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+		return new CustomUserDetails(user.getUsername(), user.getPassword(), authorities, user.getId());
 	}
 }
