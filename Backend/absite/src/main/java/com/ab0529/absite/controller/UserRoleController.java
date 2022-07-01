@@ -82,7 +82,7 @@ public class UserRoleController {
 	@DeleteMapping("/roles/remove/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")
 	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
-		logger.info("PUT /api/users/roles/remove/"+id+"/"+name);
+		logger.info("DELETE /api/users/roles/remove/"+id+"/"+name);
 		try {
 			// Make sure role exists
 			ERole roleE = ERole.valueOf(name.toUpperCase());
