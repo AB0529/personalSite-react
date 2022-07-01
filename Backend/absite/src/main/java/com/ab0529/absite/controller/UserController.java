@@ -7,12 +7,14 @@ import com.ab0529.absite.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +31,20 @@ public class UserController {
 	/*
 	* GET ALL USERS LIMIT
 	* Retries all users up to limit
+	* ROLE_ADMIN or ROLE_USER_EDIT can access this route
 	*/
+	@GetMapping("/admin/all/{max}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER_EDIT')")
+	public ResponseEntity<?> adminViewAllUsersLimited(@PathVariable int max) {
+		logger.info("GET /api/users/admin/all/"+max);
+		Page<User> users = userService.findAllLimit(max);
+
+		// No users found
+		if (users.isEmpty())
+			return ERR_NOT_FOUND;
+
+		return new ApiResponse(HttpStatus.OK, "successfully found users", users.toList()).asResponseEntity();
+	}
 
 	/*
 	* GET USER DETAILS FROM ID
@@ -41,14 +56,14 @@ public class UserController {
 	@GetMapping("/admin/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_EDIT')")
 	public ResponseEntity<?> adminViewUser(@PathVariable Long id) {
-		logger.debug("GET /api/users/admin/"+id);
+		logger.info("GET /api/users/admin/"+id);
 		return handleViewUser(id);
 	}
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> viewUser(@PathVariable Long id, Authentication authentication) {
-		logger.debug("GET /api/users/"+id);
+		logger.info("GET /api/users/"+id);
 		// Make sure user is themselves
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -83,13 +98,13 @@ public class UserController {
 	@DeleteMapping("/admin/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_DELETE')")
 	public ResponseEntity<?> deleteAnyUser(@PathVariable Long id) {
-		logger.debug("DELETE /api/users/admin/delete/"+id);
+		logger.info("DELETE /api/users/admin/delete/"+id);
 		return handleDeleteUser(id);
 	}
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> deleteCurrentUser(@PathVariable Long id, Authentication authentication) {
-		logger.debug("DELETE /api/users/delete/"+id);
+		logger.info("DELETE /api/users/delete/"+id);
 
 		// Make sure user is the owner
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
