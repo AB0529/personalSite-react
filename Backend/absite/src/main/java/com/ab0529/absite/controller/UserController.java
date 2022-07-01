@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -24,8 +21,58 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	private final ResponseEntity<?> ERR_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: user not found").asResponseEntity();
+	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
+
 	Logger logger = LoggerFactory.getLogger(UserController.class);
-	// TODO: implement user details grabbing
+
+	/*
+	* GET ALL USERS LIMIT
+	* Retries all users up to limit
+	*/
+
+	/*
+	* GET USER DETAILS FROM ID
+	* Retrieves User from user id
+	* ROLE_USER can only access themselves
+	* ROLE_ADMIN or ROLE_USER_EDIT can access any user
+	*/
+
+	@GetMapping("/admin/{id}")
+	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_EDIT')")
+	public ResponseEntity<?> adminViewUser(@PathVariable Long id) {
+		logger.debug("GET /api/users/admin/"+id);
+		return handleViewUser(id);
+	}
+
+	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> viewUser(@PathVariable Long id, Authentication authentication) {
+		logger.debug("GET /api/users/"+id);
+		// Make sure user is themselves
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+		if (customUserDetails.getId() != id)
+			return ERR_UNAUTHORIZED;
+
+		return handleViewUser(id);
+	}
+
+	// Helper method to view user details from id
+	private ResponseEntity<?> handleViewUser(Long id) {
+		try {
+			// Make sure user exists
+			Optional<User> user = userService.findById(id);
+
+			if (user.isEmpty())
+				return ERR_NOT_FOUND;
+
+			// Return user details
+			return new ApiResponse(HttpStatus.OK, "user found successfully", user.get()).asResponseEntity();
+		} catch (Exception e) {
+			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage()).asResponseEntity();
+		}
+	}
 
 	/*
 	* DELETE USER
@@ -36,14 +83,13 @@ public class UserController {
 	@DeleteMapping("/admin/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_DELETE')")
 	public ResponseEntity<?> deleteAnyUser(@PathVariable Long id) {
-		logger.debug("DELETE /admin/delete/"+id);
+		logger.debug("DELETE /api/users/admin/delete/"+id);
 		return handleDeleteUser(id);
 	}
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> deleteCurrentUser(@PathVariable Long id, Authentication authentication) {
-		logger.debug("DELETE /delete/"+id);
-		final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: unauthorized deletion").asResponseEntity();
+		logger.debug("DELETE /api/users/delete/"+id);
 
 		// Make sure user is the owner
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -56,8 +102,7 @@ public class UserController {
 	/*
 	* Helper method to handle user deletion
 	*/
-	public ResponseEntity<?> handleDeleteUser(Long id) {
-		final ResponseEntity<?> ERR_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: user not found").asResponseEntity();
+	private ResponseEntity<?> handleDeleteUser(Long id) {
 		final ResponseEntity<?> SUCCESS = new ApiResponse(HttpStatus.OK, "user deleted successfully").asResponseEntity();
 		// Make sure user exists
 		Optional<User> user = userService.findById(id);
