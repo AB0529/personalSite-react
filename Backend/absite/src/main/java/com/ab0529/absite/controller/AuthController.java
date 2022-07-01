@@ -54,7 +54,7 @@ public class AuthController {
 		final ResponseEntity<?> ERR_BAD_CREDENTIALS = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: bad login").asResponseEntity();
 
 		try {
-			logger.debug("POST /api/auth/login");
+			logger.info("POST /api/auth/login");
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 			// Load user
@@ -81,7 +81,7 @@ public class AuthController {
 		final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
 
 		try {
-			logger.debug("POST /api/auth/register");
+			logger.info("POST /api/auth/register");
 			// Make sure username and email are not taken
 			if (userService.existsByUsername(registerRequest.getUsername()))
 				return ERR_USERNAME_TAKEN;
