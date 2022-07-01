@@ -20,12 +20,14 @@ public class ApiResponse {
 
 	public ApiResponse(HttpStatus status, String message, Object result) {
 		this.status = status;
+		this.code = status.value();
 		this.message = message;
 		this.result = result;
 	}
 
 	public ApiResponse(HttpStatus status, String message) {
 		this.status = status;
+		this.code = status.value();
 		this.message = message;
 	}
 

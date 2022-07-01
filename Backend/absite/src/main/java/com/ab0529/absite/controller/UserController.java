@@ -4,6 +4,8 @@ import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.CustomUserDetails;
 import com.ab0529.absite.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +24,24 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	Logger logger = LoggerFactory.getLogger(UserController.class);
+
 	/*
 	* DELETE USER
 	* Handles user deletion
 	* ROLE_USER can only delete themselves
 	* ROLE_USER_DELETE or ROLE_ADMIN can delete any user
 	*/
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/admin/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasRole('USER_DELETE')")
 	public ResponseEntity<?> deleteAnyUser(@PathVariable Long id) {
+		logger.debug("DELETE /admin/delete/"+id);
 		return handleDeleteUser(id);
 	}
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> deleteCurrentUser(@PathVariable Long id, Authentication authentication) {
+		logger.debug("DELETE /delete/"+id);
 		final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: unauthorized deletion").asResponseEntity();
 
 		// Make sure user is the owner
