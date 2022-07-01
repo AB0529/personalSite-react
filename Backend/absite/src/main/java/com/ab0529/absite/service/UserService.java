@@ -44,7 +44,6 @@ public class UserService {
 		return userRepository.findAll(PageRequest.of(0, max));
 	}
 
-	@Transactional
 	public void addRoleToUser(Long userid, Long roleId) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
@@ -52,6 +51,18 @@ public class UserService {
 				.setParameter(1, userid)
 				.setParameter(2, roleId)
 				.executeUpdate();
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+	}
+
+	public void removeRoleFromUser(Long userid, Long id) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("DELETE FROM users_roles WHERE role_id=? AND user_id=?")
+				.setParameter(1, id)
+				.setParameter(2, userid)
+				.executeUpdate();
+		entityManager.flush();
 		entityManager.getTransaction().commit();
 	}
 }
