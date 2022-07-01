@@ -1,14 +1,12 @@
-package com.ab0529.absiteold.model;
+package com.ab0529.absite.model;
 
-import lombok.Data;
 import lombok.Getter;
 
-@Data
 @Getter
-public class UserModel {
+public class RegisterRequest {
 	private String username;
 	private String password;
+	private String email;
 	private String firstName;
 	private String lastName;
-	private String email;
 }

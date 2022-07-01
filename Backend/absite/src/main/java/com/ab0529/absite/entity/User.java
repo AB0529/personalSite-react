@@ -1,5 +1,6 @@
 package com.ab0529.absite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class User {
     private String username;
     @NotBlank
     @NonNull
+    @JsonIgnore
     private String password;
     @NotBlank
     @NonNull

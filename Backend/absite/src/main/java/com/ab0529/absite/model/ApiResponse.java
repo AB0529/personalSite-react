@@ -1,18 +1,19 @@
 package com.ab0529.absite.model;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @AllArgsConstructor
-@RequiredArgsConstructor
+@Data
+@Getter
+@Setter
 public class ApiResponse {
-	@NonNull
 	private HttpStatus status;
 	private int code;
-	@NonNull
 	private String message;
 
 	private Object result;
