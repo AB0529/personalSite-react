@@ -51,7 +51,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 		final ResponseEntity<?> ERR_USER_DISABLED = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: user is disabled").asResponseEntity();
-		final ResponseEntity<?> ERR_BAD_CREDENTIALS = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: user is disabled").asResponseEntity();
+		final ResponseEntity<?> ERR_BAD_CREDENTIALS = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: bad login").asResponseEntity();
 
 		try {
 			logger.debug("POST /api/auth/login");
