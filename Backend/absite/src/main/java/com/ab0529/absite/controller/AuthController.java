@@ -26,10 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-/**
- * Auth route controller
- * Routes: /api/auth/login, /api/auth/register
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
