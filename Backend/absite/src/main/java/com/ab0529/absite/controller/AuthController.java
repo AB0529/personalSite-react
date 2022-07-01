@@ -1,6 +1,5 @@
 package com.ab0529.absite.controller;
 
-import ch.qos.logback.classic.Logger;
 import com.ab0529.absite.component.JwtTokenUtil;
 import com.ab0529.absite.entity.ERole;
 import com.ab0529.absite.entity.Role;
@@ -11,6 +10,8 @@ import com.ab0529.absite.model.RegisterRequest;
 import com.ab0529.absite.service.JwtUserDetailsService;
 import com.ab0529.absite.service.RoleService;
 import com.ab0529.absite.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,8 @@ public class AuthController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	Logger logger = LoggerFactory.getLogger(AuthController.class);
+
 	/**
 	 * LOGIN
 	 * Handles login authentication
@@ -53,7 +56,9 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 		final ResponseEntity<?> ERR_USER_DISABLED = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: user is disabled").asResponseEntity();
 		final ResponseEntity<?> ERR_BAD_CREDENTIALS = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: user is disabled").asResponseEntity();
+
 		try {
+			logger.debug("POST /api/auth/login");
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 			// Load user
@@ -80,6 +85,7 @@ public class AuthController {
 		final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
 
 		try {
+			logger.debug("POST /api/auth/register");
 			// Make sure username and email are not taken
 			if (userService.existsByUsername(registerRequest.getUsername()))
 				return ERR_USERNAME_TAKEN;
