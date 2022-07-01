@@ -1,12 +1,11 @@
 package com.ab0529.absite.controller;
 
-import com.ab0529.absite.entity.ERole;
+import com.ab0529.absite.model.ERole;
 import com.ab0529.absite.entity.Role;
 import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.service.RoleService;
 import com.ab0529.absite.service.UserService;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

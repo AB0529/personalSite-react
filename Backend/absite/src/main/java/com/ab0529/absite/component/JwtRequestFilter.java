@@ -1,8 +1,10 @@
 package com.ab0529.absite.component;
 
+import com.ab0529.absite.entity.TokenBlacklist;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.CustomUserDetails;
 import com.ab0529.absite.service.JwtUserDetailsService;
+import com.ab0529.absite.service.TokenBlacklistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -22,11 +24,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
+	@Autowired
+	private TokenBlacklistService tokenBlacklistService;
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -77,15 +82,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
 			// Make sure remote-address matches
-			String tokenRemoteAddr = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("remote-address"));
-			if (tokenRemoteAddr.equals(request.getRemoteAddr())) {
-				logger.warn("Remote address matches");
+			String tokenIpAndAgent = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("ip-and-agent"));
+			String ipAndAgent = request.getRemoteAddr() + request.getHeader("User-Agent");
+			// Make sure token is not in blacklist
+			Optional<TokenBlacklist> blToken = tokenBlacklistService.findByToken(jwtToken);
+
+			if (blToken.isPresent())
+				logger.warn("Blacklisted token: " + blToken.get());
+			else if (tokenIpAndAgent.equals(ipAndAgent)) {
 				// if token is valid configure Spring Security to manually set authentication
 				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
-
-					logger.info(userDetails.getAuthorities());
 
 					usernamePasswordAuthenticationToken
 							.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,24 +1,25 @@
 package com.ab0529.absite.controller;
 
 import com.ab0529.absite.component.JwtTokenUtil;
-import com.ab0529.absite.entity.ERole;
+import com.ab0529.absite.entity.TokenBlacklist;
+import com.ab0529.absite.model.*;
 import com.ab0529.absite.entity.Role;
 import com.ab0529.absite.entity.User;
-import com.ab0529.absite.model.ApiResponse;
-import com.ab0529.absite.model.LoginRequest;
-import com.ab0529.absite.model.RegisterRequest;
 import com.ab0529.absite.service.JwtUserDetailsService;
 import com.ab0529.absite.service.RoleService;
+import com.ab0529.absite.service.TokenBlacklistService;
 import com.ab0529.absite.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,8 @@ public class AuthController {
 	@Autowired
 	private RoleService roleService;
 	@Autowired
+	private TokenBlacklistService tokenBlacklistService;
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -60,7 +63,8 @@ public class AuthController {
 			// Load user
 			final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
 			// Generate JwtToken with ip claim
-			final String token = jwtTokenUtil.generateTokenWithRemoteAddrClaim(userDetails, request.getRemoteAddr());
+			String ipAndAgent = request.getRemoteAddr() + request.getHeader("User-Agent");
+			final String token = jwtTokenUtil.generateTokenWithIPAndUserAgentClaim(userDetails, ipAndAgent);
 			// Return token if authentication was successful
 			return new ApiResponse(HttpStatus.OK, "authentication successful", token).asResponseEntity();
 		} catch (DisabledException e) {
@@ -111,5 +115,29 @@ public class AuthController {
 		} catch (Exception e) {
 			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage()).asResponseEntity();
 		}
+	}
+
+	/*
+	* LOGOUT
+	* Handles user logout
+	*/
+	@PreAuthorize("hasRole('USER')")
+	@PostMapping("/logout/{token}")
+	public ResponseEntity<?> authLogout(@PathVariable String token, Authentication authentication) {
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+		// Make sure token belongs to logged in user
+		String name = jwtTokenUtil.getUsernameFromToken(token);
+		if (!customUserDetails.getUsername().equals(name))
+			return new ApiResponse(HttpStatus.UNAUTHORIZED, "error: unauthorized logout").asResponseEntity();
+
+		// Add token to blacklist
+		TokenBlacklist tokenBlacklist = new TokenBlacklist(
+				token,
+				EBlacklistReason.LOGOUT
+		);
+		tokenBlacklistService.save(tokenBlacklist);
+
+		return new ApiResponse(HttpStatus.OK, "logout successful", tokenBlacklist).asResponseEntity();
 	}
 }

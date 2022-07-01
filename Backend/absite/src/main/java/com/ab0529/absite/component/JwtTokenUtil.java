@@ -58,9 +58,9 @@ public class JwtTokenUtil implements Serializable {
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 
-	public String generateTokenWithRemoteAddrClaim(UserDetails userDetails, String remoteAddr) {
+	public String generateTokenWithIPAndUserAgentClaim(UserDetails userDetails, String ipAndAgent) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("remote-address", remoteAddr);
+		claims.put("ip-and-agent", ipAndAgent);
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 

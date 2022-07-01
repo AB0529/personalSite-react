@@ -1,4 +1,4 @@
-package com.ab0529.absite.entity;
+package com.ab0529.absite.model;
 
 public enum ERole {
 	// Standard user
