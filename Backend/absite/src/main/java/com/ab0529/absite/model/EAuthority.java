@@ -5,6 +5,10 @@ public enum EAuthority {
 	USER_DELETE,
 	// Allows for editing of other users
 	USER_EDIT,
+	// Allows for editing of other user's roles only (except ROLE_ADMIN)
+	USER_ROLE_EDIT,
+	// Allows for editing of other user's authorities only (except ADMIN_ROLE_ADD and ADMIN_ROLE_REMOVE)
+	USER_AUTHORITY_EDIT,
 	// Allows for adding roles to other users (except ROLE_ADMIN)
 	USER_ROLE_ADD,
 	// Allows for adding auth to other users
