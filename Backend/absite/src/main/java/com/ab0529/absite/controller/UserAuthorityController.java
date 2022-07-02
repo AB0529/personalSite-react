@@ -1,7 +1,6 @@
 package com.ab0529.absite.controller;
 
 import com.ab0529.absite.entity.Authority;
-import com.ab0529.absite.entity.Role;
 import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.EAuthority;
@@ -32,12 +31,12 @@ public class UserAuthorityController {
 
 	/*
 	* ADD ROLE
-	* Adds a authority to any user
+	* Adds an authority to any user
 	* Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
 	*/
 	@PutMapping("/authorities/add/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_AUTHORITY_ADD', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
-	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
+	public ResponseEntity<?> addAuthority(@PathVariable Long id, @PathVariable String name) {
 		log.info("PUT /api/users/authorities/add/"+id+"/"+name);
 		try {
 			// Make sure authority exists
@@ -46,14 +45,14 @@ public class UserAuthorityController {
 			if (authorityE.equals(EAuthority.ADMIN_ROLE_ADD))
 				return ERR_UNAUTHORIZED;
 
-			return addRoleHelper(id, authorityE);
+			return addAuthorityHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
 			return ERR_ROLE_NOT_FOUND;
 		}
 	}
 
 	// Helper method to add authority to user
-	public ResponseEntity<?> addRoleHelper(Long userid, EAuthority authority) {
+	public ResponseEntity<?> addAuthorityHelper(Long userid, EAuthority authority) {
 		try {
 			Optional<User> user = userService.findById(userid);
 			if (user.isEmpty())
@@ -74,25 +73,25 @@ public class UserAuthorityController {
 
 	/*
 	 * REMOVE ROLE
-	 * Removes a authority from any user
+	 * Removes an authority from any user
 	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
 	 */
 	@DeleteMapping("/authorities/remove/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
-	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
+	public ResponseEntity<?> removeAuthority(@PathVariable Long id, @PathVariable String name) {
 		log.info("DELETE /api/users/authorities/remove/"+id+"/"+name);
 		try {
 			// Make sure authority exists
 			EAuthority authorityE = EAuthority.valueOf(name.toUpperCase());
 
-			return removeRoleHelper(id, authorityE);
+			return removeAuthorityHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
 			return ERR_ROLE_NOT_FOUND;
 		}
 	}
 
 	// Helper method to remove authority from user
-	public ResponseEntity<?> removeRoleHelper(Long userid, EAuthority authority) {
+	public ResponseEntity<?> removeAuthorityHelper(Long userid, EAuthority authority) {
 		try {
 			Optional<User> user = userService.findById(userid);
 			if (user.isEmpty())
