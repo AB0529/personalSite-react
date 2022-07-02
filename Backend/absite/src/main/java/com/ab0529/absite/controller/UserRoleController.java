@@ -7,8 +7,6 @@ import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.service.RoleService;
 import com.ab0529.absite.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +30,12 @@ public class UserRoleController {
 	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: role exists on user").asResponseEntity();
 
 	/*
-	* ADD ROLE
-	* Adds a role to any user
-	* Must have ROLE_ADMIN or USER_EDIT_AUTHORITY or USER_ROLE_ADD_AUTHORITY
-	* // TODO: implement this for authorities when separated
-	*/
-	@PutMapping("/roles/add/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT')")
+	 * ADD ROLE
+	 * Adds a role to any user
+	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
+	 */
+	@PutMapping("/authorities/add/{id}/{name}")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT', 'USER_ROLE_EDIT')")
 	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
 		log.info("PUT /api/users/roles/add/"+id+"/"+name);
 		try {
@@ -77,11 +74,10 @@ public class UserRoleController {
 	/*
 	 * REMOVE ROLE
 	 * Removes a role from any user
-	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE
-	 * // TODO: implement this for authorities when separated
+	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
 	 */
 	@DeleteMapping("/roles/remove/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_ROLE_EDIT')")
 	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
 		log.info("DELETE /api/users/roles/remove/"+id+"/"+name);
 		try {
