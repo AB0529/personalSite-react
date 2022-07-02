@@ -1,6 +1,5 @@
 package com.ab0529.absite.entity;
 
-import com.ab0529.absite.model.EBlacklistReason;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-// TODO: periodically clear this
 public class TokenBlacklist {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +20,4 @@ public class TokenBlacklist {
 	@NonNull
 	@NotNull
 	private String token;
-
-	@NonNull
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private EBlacklistReason reason;
 }

@@ -1,6 +1,8 @@
 package com.ab0529.absite.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -11,6 +13,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@DynamicUpdate
+@Transactional
 public class File {
 	@Id
 	@org.hibernate.annotations.Type(type="org.hibernate.type.PostgresUUIDType")

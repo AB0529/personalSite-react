@@ -130,10 +130,7 @@ public class AuthController {
 			return new ApiResponse(HttpStatus.UNAUTHORIZED, "error: unauthorized logout").asResponseEntity();
 
 		// Add token to blacklist
-		TokenBlacklist tokenBlacklist = new TokenBlacklist(
-				token,
-				EBlacklistReason.LOGOUT
-		);
+		TokenBlacklist tokenBlacklist = new TokenBlacklist(token);
 		tokenBlacklistService.save(tokenBlacklist);
 
 		return new ApiResponse(HttpStatus.OK, "logout successful", tokenBlacklist).asResponseEntity();
