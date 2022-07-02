@@ -34,6 +34,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
+	private final ApiResponse ERR_BLACKLSITED_TOKEN = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: cannot use this jwt token");
+	private final ApiResponse ERR_IP_AND_HEADER_MISMATCH = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: ip and header mismatch");
+	private final ApiResponse ERR_TOKEN_EXPIRED = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: jwt token expired");
+	private final ApiResponse ERR_TOKEN_NOT_BEARER = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: jwt token does not begin with Bearer string");
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws IOException
@@ -41,53 +46,40 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		final String requestTokenHeader = request.getHeader("Authorization");
 
 		String username = null;
-		String jwtToken = null;
+		String jwtToken;
+
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (ExpiredJwtException e) {
-				log.warn("Cannot set user authentication: {}", e);
-				PrintWriter out = response.getWriter();
-				ApiResponse re = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: token expired");
-				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-				String respStr = ow.writeValueAsString(re);
-
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-
-				out.print(respStr);
-				out.flush();
+				printJsonResponseFromApiResponse(response, ERR_TOKEN_EXPIRED);
 			}
 			catch (Exception e) {
-				PrintWriter out = response.getWriter();
-				ApiResponse re = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage());
-				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-				String respStr = ow.writeValueAsString(re);
-
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-
-				out.print(respStr);
-				out.flush();
+				printJsonResponseFromApiResponse(response, new ApiResponse(
+						HttpStatus.INTERNAL_SERVER_ERROR,
+						"error: " + e.getMessage()
+				));
 			}
 		} else {
-			log.warn("JWT Token does not begin with Bearer String");
+			printJsonResponseFromApiResponse(response, ERR_TOKEN_NOT_BEARER);
+			return;
 		}
 
 		// Once we get the token validate it
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-			// Make sure remote-address matches
+			// Make sure ip and user-agent match
 			String tokenIpAndAgent = (String) jwtTokenUtil.getClaimFromToken(jwtToken, c -> c.get("ip-and-agent"));
 			String ipAndAgent = request.getRemoteAddr() + request.getHeader("User-Agent");
+
 			// Make sure token is not in blacklist
 			Boolean blToken = tokenBlacklistService.existsByToken(jwtToken);
 
 			if (blToken)
-				log.warn("Blacklisted user: " + username);
+				printJsonResponseFromApiResponse(response, ERR_BLACKLSITED_TOKEN);
 			else if (tokenIpAndAgent.equals(ipAndAgent)) {
 				// if token is valid configure Spring Security to manually set authentication
 				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
@@ -102,11 +94,29 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				}
 			}
+			else
+				printJsonResponseFromApiResponse(response, ERR_IP_AND_HEADER_MISMATCH);
 		}
+
 		try {
 			filterChain.doFilter(request, response);
 		} catch (ServletException e) {
-			log.warn("ServetletException: " + e.getMessage());
+			printJsonResponseFromApiResponse(response, new ApiResponse(
+					HttpStatus.INTERNAL_SERVER_ERROR,
+					"error: " + e.getMessage()
+			));
 		}
+	}
+
+	private void printJsonResponseFromApiResponse(HttpServletResponse response, ApiResponse apiResponse) throws IOException {
+		PrintWriter out = response.getWriter();
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String respStr = ow.writeValueAsString(apiResponse);
+
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+
+		out.print(respStr);
+		out.flush();
 	}
 }
