@@ -30,12 +30,12 @@ public class UserAuthorityController {
 	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: role exists on user").asResponseEntity();
 
 	/*
-	* ADD AUTHORITY
-	* Adds an authority to any user
-	* Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD
+	* ADD ROLE
+	* Adds a role to any user
+	* Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
 	*/
 	@PutMapping("/authorities/add/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_AUTHORITY_ADD', 'USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT', 'USER_ROLE_EDIT')")
 	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
 		log.info("PUT /api/users/roles/add/"+id+"/"+name);
 		try {
@@ -74,11 +74,10 @@ public class UserAuthorityController {
 	/*
 	 * REMOVE ROLE
 	 * Removes a role from any user
-	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE
-	 * // TODO: implement this for authorities when separated
+	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
 	 */
 	@DeleteMapping("/roles/remove/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_ROLE_EDIT')")
 	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
 		log.info("DELETE /api/users/roles/remove/"+id+"/"+name);
 		try {
