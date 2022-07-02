@@ -65,4 +65,26 @@ public class UserService {
 		entityManager.flush();
 		entityManager.getTransaction().commit();
 	}
+
+	public void addAuthorityToUser(Long userid, long id) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("INSERT INTO users_authorities(user_id, authorities_id) VALUES(?, ?)")
+				.setParameter(1, userid)
+				.setParameter(2, id)
+				.executeUpdate();
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+	}
+
+	public void removeAuthorityFromUser(Long userid, long id) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("DELETE FROM users_authorities WHERE authorities_id=? AND user_id=?")
+				.setParameter(1, id)
+				.setParameter(2, userid)
+				.executeUpdate();
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+	}
 }

@@ -26,13 +26,13 @@ public class UserAuthorityController {
 
 	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
 	private final ResponseEntity<?> ERR_USER_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: user not found").asResponseEntity();
-	private final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority not found").asResponseEntity();
-	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority exists on user").asResponseEntity();
+	private final ResponseEntity<?> ERR_AUTHORITY_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority not found").asResponseEntity();
+	private final ResponseEntity<?> ERR_AUTHORITY_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority exists on user").asResponseEntity();
 
 	/*
-	* ADD ROLE
+	* ADD AUTHORITY
 	* Adds an authority to any user
-	* Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
+	* Must have AUTHORITY_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
 	*/
 	@PutMapping("/authorities/add/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_AUTHORITY_ADD', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
@@ -47,7 +47,7 @@ public class UserAuthorityController {
 
 			return addAuthorityHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
-			return ERR_ROLE_NOT_FOUND;
+			return ERR_AUTHORITY_NOT_FOUND;
 		}
 	}
 
@@ -60,24 +60,24 @@ public class UserAuthorityController {
 
 			// Add authority
 			Authority r = authorityService.findByName(authority).orElseThrow();
-			userService.addRoleToUser(userid, r.getId());
+			userService.addAuthorityToUser(userid, r.getId());
 			return new ApiResponse(HttpStatus.OK, "successfully added authority").asResponseEntity();
 		}
 		catch (Exception e) {
 			if (e.getMessage().startsWith("org.hibernate.exception.ConstraintViolationException"))
-				return ERR_ROLE_ALREADY_ADDED;
+				return ERR_AUTHORITY_ALREADY_ADDED;
 
 			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage()).asResponseEntity();
 		}
 	}
 
 	/*
-	 * REMOVE ROLE
+	 * REMOVE AUTHORITY
 	 * Removes an authority from any user
-	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
+	 * Must have AUTHORITY_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
 	 */
 	@DeleteMapping("/authorities/remove/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_AUTHORITY_REMOVE', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
 	public ResponseEntity<?> removeAuthority(@PathVariable Long id, @PathVariable String name) {
 		log.info("DELETE /api/users/authorities/remove/"+id+"/"+name);
 		try {
@@ -86,7 +86,7 @@ public class UserAuthorityController {
 
 			return removeAuthorityHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
-			return ERR_ROLE_NOT_FOUND;
+			return ERR_AUTHORITY_NOT_FOUND;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class UserAuthorityController {
 
 			// Remove authority
 			Authority r = authorityService.findByName(authority).orElseThrow();
-			userService.removeRoleFromUser(userid, r.getId());
+			userService.removeAuthorityFromUser(userid, r.getId());
 			return new ApiResponse(HttpStatus.OK, "successfully removed authority").asResponseEntity();
 		}
 		catch (Exception e) {
