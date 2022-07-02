@@ -1,10 +1,11 @@
 package com.ab0529.absite.controller;
 
+import com.ab0529.absite.entity.Authority;
 import com.ab0529.absite.entity.Role;
 import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
-import com.ab0529.absite.model.ERole;
-import com.ab0529.absite.service.RoleService;
+import com.ab0529.absite.model.EAuthority;
+import com.ab0529.absite.service.AuthorityService;
 import com.ab0529.absite.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,48 +21,48 @@ import java.util.Optional;
 @Slf4j
 public class UserAuthorityController {
 	@Autowired
-	private RoleService roleService;
+	private AuthorityService authorityService;
 	@Autowired
 	private UserService userService;
 
 	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
 	private final ResponseEntity<?> ERR_USER_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: user not found").asResponseEntity();
-	private final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
-	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: role exists on user").asResponseEntity();
+	private final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority not found").asResponseEntity();
+	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: authority exists on user").asResponseEntity();
 
 	/*
 	* ADD ROLE
-	* Adds a role to any user
+	* Adds a authority to any user
 	* Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
 	*/
 	@PutMapping("/authorities/add/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT', 'USER_ROLE_EDIT')")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_AUTHORITY_ADD', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
 	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
-		log.info("PUT /api/users/roles/add/"+id+"/"+name);
+		log.info("PUT /api/users/authorities/add/"+id+"/"+name);
 		try {
-			// Make sure role exists
-			ERole roleE = ERole.valueOf(name.toUpperCase());
-			// Make sure role is not ROLE_ADMIN
-			if (roleE.equals(ERole.ROLE_ADMIN))
+			// Make sure authority exists
+			EAuthority authorityE = EAuthority.valueOf(name.toUpperCase());
+			// Make sure authority is not ADMIN_ROLE_ADD
+			if (authorityE.equals(EAuthority.ADMIN_ROLE_ADD))
 				return ERR_UNAUTHORIZED;
 
-			return addRoleHelper(id, roleE);
+			return addRoleHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
 			return ERR_ROLE_NOT_FOUND;
 		}
 	}
 
-	// Helper method to add role to user
-	public ResponseEntity<?> addRoleHelper(Long userid, ERole role) {
+	// Helper method to add authority to user
+	public ResponseEntity<?> addRoleHelper(Long userid, EAuthority authority) {
 		try {
 			Optional<User> user = userService.findById(userid);
 			if (user.isEmpty())
 				return ERR_USER_NOT_FOUND;
 
-			// Add role
-			Role r = roleService.findByName(role).orElseThrow();
+			// Add authority
+			Authority r = authorityService.findByName(authority).orElseThrow();
 			userService.addRoleToUser(userid, r.getId());
-			return new ApiResponse(HttpStatus.OK, "successfully added role").asResponseEntity();
+			return new ApiResponse(HttpStatus.OK, "successfully added authority").asResponseEntity();
 		}
 		catch (Exception e) {
 			if (e.getMessage().startsWith("org.hibernate.exception.ConstraintViolationException"))
@@ -73,37 +74,34 @@ public class UserAuthorityController {
 
 	/*
 	 * REMOVE ROLE
-	 * Removes a role from any user
+	 * Removes a authority from any user
 	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE, USER_ROLE_EDIT
 	 */
-	@DeleteMapping("/roles/remove/{id}/{name}")
-	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_ROLE_EDIT')")
+	@DeleteMapping("/authorities/remove/{id}/{name}")
+	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT', 'USER_AUTHORITY_EDIT')")
 	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
-		log.info("DELETE /api/users/roles/remove/"+id+"/"+name);
+		log.info("DELETE /api/users/authorities/remove/"+id+"/"+name);
 		try {
-			// Make sure role exists
-			ERole roleE = ERole.valueOf(name.toUpperCase());
-			// Make sure role is not ROLE_ADMIN
-			if (roleE.equals(ERole.ROLE_ADMIN))
-				return ERR_UNAUTHORIZED;
+			// Make sure authority exists
+			EAuthority authorityE = EAuthority.valueOf(name.toUpperCase());
 
-			return removeRoleHelper(id, roleE);
+			return removeRoleHelper(id, authorityE);
 		} catch (IllegalArgumentException e) {
 			return ERR_ROLE_NOT_FOUND;
 		}
 	}
 
-	// Helper method to remove role from user
-	public ResponseEntity<?> removeRoleHelper(Long userid, ERole role) {
+	// Helper method to remove authority from user
+	public ResponseEntity<?> removeRoleHelper(Long userid, EAuthority authority) {
 		try {
 			Optional<User> user = userService.findById(userid);
 			if (user.isEmpty())
 				return ERR_USER_NOT_FOUND;
 
-			// Remove role
-			Role r = roleService.findByName(role).orElseThrow();
+			// Remove authority
+			Authority r = authorityService.findByName(authority).orElseThrow();
 			userService.removeRoleFromUser(userid, r.getId());
-			return new ApiResponse(HttpStatus.OK, "successfully removed role").asResponseEntity();
+			return new ApiResponse(HttpStatus.OK, "successfully removed authority").asResponseEntity();
 		}
 		catch (Exception e) {
 			return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage()).asResponseEntity();
