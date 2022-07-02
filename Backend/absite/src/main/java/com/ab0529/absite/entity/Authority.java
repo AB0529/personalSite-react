@@ -1,5 +1,6 @@
 package com.ab0529.absite.entity;
 
+import com.ab0529.absite.model.EAuthority;
 import com.ab0529.absite.model.ERole;
 import lombok.*;
 import org.springframework.transaction.annotation.Transactional;

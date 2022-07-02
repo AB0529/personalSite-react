@@ -8,23 +8,19 @@ public enum EAuthority {
 	// Allows for adding roles to other users (except ROLE_ADMIN)
 	USER_ROLE_ADD,
 	// Allows for adding auth to other users
-	USER_AUTH_ADD,
+	USER_AUTHORITY_ADD,
 	// Allows for removing roles from other users (except ROLE_ADMIN)
 	USER_ROLE_REMOVE,
 	// Allows for removing auth from other users
-	USER_AUTH_REMOVE,
+	USER_AUTHORITY_REMOVE,
 	// Allows for adding ROLE_ADMIN to other users
 	ADMIN_ROLE_ADD,
 	// Allows for removing ROLE_ADMIN from other users
 	ADMIN_ROLE_REMOVE,
 	// Allows for deletion of other users file's
-	USER_FILE_REMOVE,
-	// Allows for banning of users
-	USER_BAN_ADD,
-	// Allows for unbanning of users
-	USER_BAN_REMOVE,
-	// Allows for full control of banned users
-	USER_BAN,
-	// Allows for viewing banned users
-	USER_BAN_VIEW,
+	FILE_REMOVE,
+	// Allows for viewing of all users
+	USER_VIEW,
+	// Allows for viewing of all files
+	FILE_VIEW
 }

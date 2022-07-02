@@ -46,8 +46,6 @@ public class User {
     @Email
     @NonNull
     private String email;
-
-    // TODO: Refactor to role and authorities separated
     @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -56,7 +54,18 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_authorities",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "authorities_id") }
+    )
+    private Set<Authority> authorities = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
     }
+   public void addAuthority(Authority authority)  {
+        this.authorities.add(authority);
+   }
 }
