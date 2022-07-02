@@ -35,6 +35,7 @@ public class UserRoleController {
 	* ADD ROLE
 	* Adds a role to any user
 	* Must have ROLE_ADMIN or USER_EDIT_AUTHORITY or USER_ROLE_ADD_AUTHORITY
+	* // TODO: implement this for authorities when separated
 	*/
 	@PutMapping("/roles/add/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT')")
@@ -77,6 +78,7 @@ public class UserRoleController {
 	 * REMOVE ROLE
 	 * Removes a role from any user
 	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_REMOVE
+	 * // TODO: implement this for authorities when separated
 	 */
 	@DeleteMapping("/roles/remove/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")
