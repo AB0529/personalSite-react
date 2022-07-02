@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
+// TODO: periodically clear this
 public class TokenBlacklist {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

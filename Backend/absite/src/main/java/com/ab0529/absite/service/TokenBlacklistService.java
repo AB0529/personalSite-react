@@ -24,4 +24,8 @@ public class TokenBlacklistService {
 	public void save(TokenBlacklist tokenBlacklist) {
 		blacklistRepository.save(tokenBlacklist);
 	}
+
+	public void deleteAll() {
+		blacklistRepository.deleteAll();
+	}
 }
