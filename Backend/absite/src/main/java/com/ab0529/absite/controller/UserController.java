@@ -4,6 +4,7 @@ import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.CustomUserDetails;
 import com.ab0529.absite.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users/")
+@Slf4j
 public class UserController {
 	@Autowired
 	UserService userService;
 
 	private final ResponseEntity<?> ERR_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: user not found").asResponseEntity();
 	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
-
-	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	/*
 	* GET ALL USERS LIMIT
@@ -35,7 +35,7 @@ public class UserController {
 	@GetMapping("/admin/all/{max}")
 	@PreAuthorize("hasRole('ADMIN') or hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminViewAllUsersLimited(@PathVariable int max) {
-		logger.info("GET /api/users/admin/all/"+max);
+		log.info("GET /api/users/admin/all/"+max);
 		Page<User> users = userService.findAllLimit(max);
 
 		// No users found
@@ -55,14 +55,14 @@ public class UserController {
 	@GetMapping("/admin/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminViewUser(@PathVariable Long id) {
-		logger.info("GET /api/users/admin/"+id);
+		log.info("GET /api/users/admin/"+id);
 		return handleViewUser(id);
 	}
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> viewUser(@PathVariable Long id, Authentication authentication) {
-		logger.info("GET /api/users/"+id);
+		log.info("GET /api/users/"+id);
 		// Make sure user is themselves
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -97,13 +97,13 @@ public class UserController {
 	@DeleteMapping("/admin/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_DELETE')")
 	public ResponseEntity<?> deleteAnyUser(@PathVariable Long id) {
-		logger.info("DELETE /api/users/admin/delete/"+id);
+		log.info("DELETE /api/users/admin/delete/"+id);
 		return handleDeleteUser(id);
 	}
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> deleteCurrentUser(@PathVariable Long id, Authentication authentication) {
-		logger.info("DELETE /api/users/delete/"+id);
+		log.info("DELETE /api/users/delete/"+id);
 
 		// Make sure user is the owner
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();

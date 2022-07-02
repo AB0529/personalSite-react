@@ -5,6 +5,7 @@ import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.model.CustomUserDetails;
 import com.ab0529.absite.model.UserUpdateRequest;
 import com.ab0529.absite.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users/")
+@Slf4j
 public class UserUpdateController {
 	@Autowired
 	UserService userService;
@@ -30,7 +32,6 @@ public class UserUpdateController {
 	private final ResponseEntity<?> UPDATE_SUCCESS = new ApiResponse(HttpStatus.OK, "successfully updated user").asResponseEntity();
 	private final ResponseEntity<?> ERR_UNAUTHORIZED = new ApiResponse(HttpStatus.FORBIDDEN, "error: unauthorized access").asResponseEntity();
 
-	Logger logger = LoggerFactory.getLogger(UserUpdateController.class);
 	/*
 	* UPDATE USER
 	* Updates user with new user object
@@ -42,7 +43,7 @@ public class UserUpdateController {
 	@PatchMapping("/admin/update")
 	@PreAuthorize("hasRole('ADMIN') OR hasAuthority('USER_EDIT')")
 	public ResponseEntity<?> adminUpdateUserPart(@RequestBody UserUpdateRequest newUser) {
-		logger.info("PATCH /api/users/admin/update");
+		log.info("PATCH /api/users/admin/update");
 		if (newUser.getId() == null)
 			return ERR_NO_ID;
 		return userUpdate(newUser);
@@ -51,7 +52,7 @@ public class UserUpdateController {
 	@PatchMapping("/update")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> userUpdatePart(@RequestBody UserUpdateRequest newUser, Authentication authentication) {
-		logger.info("PATCH /api/users/update");
+		log.info("PATCH /api/users/update");
 		if (newUser.getId() == null)
 			return ERR_NO_ID;
 		// Make sure user is themselves

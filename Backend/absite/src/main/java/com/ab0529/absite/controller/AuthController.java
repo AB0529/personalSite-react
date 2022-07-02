@@ -9,8 +9,7 @@ import com.ab0529.absite.service.JwtUserDetailsService;
 import com.ab0529.absite.service.RoleService;
 import com.ab0529.absite.service.TokenBlacklistService;
 import com.ab0529.absite.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -45,8 +45,6 @@ public class AuthController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	Logger logger = LoggerFactory.getLogger(AuthController.class);
-
 	/**
 	 * LOGIN
 	 * Handles login authentication
@@ -57,7 +55,7 @@ public class AuthController {
 		final ResponseEntity<?> ERR_BAD_CREDENTIALS = new ApiResponse(HttpStatus.UNPROCESSABLE_ENTITY, "error: bad login").asResponseEntity();
 
 		try {
-			logger.info("POST /api/auth/login");
+			log.info("POST /api/auth/login");
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 			// Load user
@@ -85,7 +83,7 @@ public class AuthController {
 		final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
 
 		try {
-			logger.info("POST /api/auth/register");
+			log.info("POST /api/auth/register");
 			// Make sure username and email are not taken
 			if (userService.existsByUsername(registerRequest.getUsername()))
 				return ERR_USERNAME_TAKEN;

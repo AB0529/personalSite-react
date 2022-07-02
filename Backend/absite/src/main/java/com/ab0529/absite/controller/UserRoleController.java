@@ -6,6 +6,7 @@ import com.ab0529.absite.entity.User;
 import com.ab0529.absite.model.ApiResponse;
 import com.ab0529.absite.service.RoleService;
 import com.ab0529.absite.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users/")
+@Slf4j
 public class UserRoleController {
 	@Autowired
 	private RoleService roleService;
@@ -29,8 +31,6 @@ public class UserRoleController {
 	private final ResponseEntity<?> ERR_ROLE_NOT_FOUND = new ApiResponse(HttpStatus.NOT_FOUND, "error: role not found").asResponseEntity();
 	private final ResponseEntity<?> ERR_ROLE_ALREADY_ADDED = new ApiResponse(HttpStatus.NOT_FOUND, "error: role exists on user").asResponseEntity();
 
-	Logger logger = LoggerFactory.getLogger(UserRoleController.class);
-
 	/*
 	* ADD ROLE
 	* Adds a role to any user
@@ -39,7 +39,7 @@ public class UserRoleController {
 	@PutMapping("/roles/add/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT')")
 	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
-		logger.info("PUT /api/users/roles/add/"+id+"/"+name);
+		log.info("PUT /api/users/roles/add/"+id+"/"+name);
 		try {
 			// Make sure role exists
 			ERole roleE = ERole.valueOf(name.toUpperCase());
@@ -81,7 +81,7 @@ public class UserRoleController {
 	@DeleteMapping("/roles/remove/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_REMOVE', 'USER_EDIT')")
 	public ResponseEntity<?> removeRole(@PathVariable Long id, @PathVariable String name) {
-		logger.info("DELETE /api/users/roles/remove/"+id+"/"+name);
+		log.info("DELETE /api/users/roles/remove/"+id+"/"+name);
 		try {
 			// Make sure role exists
 			ERole roleE = ERole.valueOf(name.toUpperCase());
