@@ -8,12 +8,11 @@ import com.ab0529.absite.service.TokenBlacklistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,10 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.Optional;
 
 @Component
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
@@ -50,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (ExpiredJwtException e) {
-				logger.warn("Cannot set user authentication: {}", e);
+				log.warn("Cannot set user authentication: {}", e);
 				PrintWriter out = response.getWriter();
 				ApiResponse re = new ApiResponse(HttpStatus.UNAUTHORIZED, "error: token expired");
 				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -75,7 +73,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				out.flush();
 			}
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+			log.warn("JWT Token does not begin with Bearer String");
 		}
 
 		// Once we get the token validate it
@@ -89,7 +87,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			Boolean blToken = tokenBlacklistService.existsByToken(jwtToken);
 
 			if (blToken)
-				logger.warn("Blacklisted user: " + username);
+				log.warn("Blacklisted user: " + username);
 			else if (tokenIpAndAgent.equals(ipAndAgent)) {
 				// if token is valid configure Spring Security to manually set authentication
 				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
@@ -108,7 +106,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (ServletException e) {
-			logger.warn("ServetletException: " + e.getMessage());
+			log.warn("ServetletException: " + e.getMessage());
 		}
 	}
 }
