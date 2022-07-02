@@ -34,7 +34,7 @@ public class UserRoleController {
 	 * Adds a role to any user
 	 * Must have ROLE_ADMIN or USER_EDIT or USER_ROLE_ADD or USER_ROLE_EDIT
 	 */
-	@PutMapping("/authorities/add/{id}/{name}")
+	@PutMapping("/roles/add/{id}/{name}")
 	@PreAuthorize("hasRole('ADMIN') OR hasAnyAuthority('USER_ROLE_ADD', 'USER_EDIT', 'USER_ROLE_EDIT')")
 	public ResponseEntity<?> addRole(@PathVariable Long id, @PathVariable String name) {
 		log.info("PUT /api/users/roles/add/"+id+"/"+name);
