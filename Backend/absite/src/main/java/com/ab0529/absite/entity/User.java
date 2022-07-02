@@ -47,6 +47,7 @@ public class User {
     @NonNull
     private String email;
 
+    // TODO: Refactor to role and authorities separated
     @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
