@@ -1,12 +1,15 @@
 package com.ab0529.absite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints ={
@@ -19,6 +22,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @ToString
+@DynamicUpdate
+@Transactional
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +34,7 @@ public class User {
     private String username;
     @NotBlank
     @NonNull
+    @JsonIgnore
     private String password;
     @NotBlank
     @NonNull
@@ -40,8 +46,7 @@ public class User {
     @Email
     @NonNull
     private String email;
-
-    @ManyToMany(cascade = { CascadeType.REFRESH })
+    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -49,7 +54,18 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_authorities",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "authorities_id") }
+    )
+    private Set<Authority> authorities = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
     }
+   public void addAuthority(Authority authority)  {
+        this.authorities.add(authority);
+   }
 }

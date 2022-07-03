@@ -1,24 +1,23 @@
 package com.ab0529.absite.entity;
 
-import com.ab0529.absite.model.ERole;
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "token_blacklist")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Transactional
-public class Role {
+public class TokenBlacklist {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Enumerated(EnumType.STRING)
 	@NonNull
-	private ERole name;
+	@NotNull
+	private String token;
 }

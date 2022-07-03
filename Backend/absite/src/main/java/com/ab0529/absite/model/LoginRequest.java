@@ -1,11 +1,9 @@
 package com.ab0529.absite.model;
 
-import lombok.Data;
 import lombok.Getter;
 
-@Data
 @Getter
-public class LoginModel {
+public class LoginRequest {
 	private String username;
 	private String password;
 }
